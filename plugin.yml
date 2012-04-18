@@ -1,0 +1,9 @@
+name: SimpleClansExtensions
+main: com.barroncraft.sce.SimpleClansExtensions
+version: 1
+commands:
+  sce:
+    description: Various extra commands added to Simple Clans
+    usage: /sce join <clan>
+    permission: sce.basic
+    permission-message: You don't have permission to use this command.
