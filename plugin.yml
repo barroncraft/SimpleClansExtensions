@@ -6,5 +6,4 @@ commands:
   sce:
     description: Various extra commands added to Simple Clans
     usage: /sce join [red|blue]
-    permission: sce.join
     permission-message: You don't have permission to use this command.

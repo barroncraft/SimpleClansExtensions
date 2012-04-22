@@ -1,6 +1,13 @@
 world: dota
-teams:
-    red:
-        spawn: {x: -1189, y: 50, z: 444}
-    blue:
-	    spawn: {x: -943, y: 50, z: 187}
+joinDifference: 2
+clans:
+ red: 
+  spawn: 
+   x: -1189
+   y: 50
+   z: 444
+ blue:
+  spawn:
+   x: -943
+   y: 50
+   z: 187

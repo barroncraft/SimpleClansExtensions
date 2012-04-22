@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 public class ExtensionsCommand 
 {
-	private static final int MaxDifference = 2;
+	
 	SimpleClansExtensions plugin;
 	
 	public ExtensionsCommand(SimpleClansExtensions plugin)
@@ -25,24 +25,26 @@ public class ExtensionsCommand
 		
 		if (oldClan != null)
 		{
-			if (PlayerDifference(oldClan, newClan) >= MaxDifference)
+			if (oldClan.getName().equalsIgnoreCase(newClan.getName()))
+				player.sendMessage(ChatColor.RED + "You can't transfer to the same team");
+			else if (PlayerDifference(oldClan, newClan) < plugin.maxDifference)
+				player.sendMessage(ChatColor.RED + "You can't transfer teams unless there is a difference of " + plugin.maxDifference + " between them");
+			else
 			{
 				oldClan.removeMember(player.getName());
 				AddPlayerToClan(clanPlayer, newClan, newClanName);
 				player.sendMessage(ChatColor.BLUE + "You have been transfered to team " + newClanName);
 			}
-			else
-				player.sendMessage(ChatColor.RED + "You can't transfer teams unless there is a difference of " + MaxDifference + " between them");
 		} 
 		else 
 		{
-			if (PlayerDifference(newClan, MaxDifference) < MaxDifference)
+			if (PlayerDifference(newClan, plugin.maxDifference) >= plugin.maxDifference)
+				player.sendMessage(ChatColor.RED + "That team already has too many players.  Try a different one.");
+			else
 			{
 				AddPlayerToClan(clanPlayer, newClan, newClanName);
 				player.sendMessage(ChatColor.BLUE + "You have joined team " + newClanName);
 			}
-			else
-				player.sendMessage(ChatColor.RED + "That team already has too many players.  Try a different one.");
 		}
 	}
 	
@@ -90,7 +92,8 @@ public class ExtensionsCommand
 		int count = 0;
 		for (ClanPlayer player : clan.getMembers())
 		{
-			if (player.toPlayer().isOnline())
+			Player onlinePlayer = player.toPlayer();
+			if (onlinePlayer != null && onlinePlayer.isOnline())
 				count++;
 		}
 		return count;

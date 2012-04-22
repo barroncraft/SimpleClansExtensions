@@ -16,8 +16,9 @@
 
 package com.barroncraft.sce;
 
-import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -33,26 +34,21 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.util.Vector;
 
 public class SimpleClansExtensions extends JavaPlugin
 {
 	public ClanManager manager;
 	public Set<String> ClanNames = new HashSet<String>();
-	public Dictionary<String, Location> spawnLocations;
-	
-	private Logger log;
-	private World world;
+	public Map<String, Location> spawnLocations = new HashMap<String, Location>();
+	public int maxDifference;
 	
 	private ExtensionsCommand commandManager;
-	
+	private Logger log;
 	
 	
 	public void onEnable()
 	{
-		
 		log = this.getLogger();
-		
 		Plugin clansPlugin = getServer().getPluginManager().getPlugin("SimpleClans");
 	    if (clansPlugin == null)
 	    {
@@ -62,19 +58,28 @@ public class SimpleClansExtensions extends JavaPlugin
 	    manager = ((SimpleClans)clansPlugin).getClanManager();
 		commandManager = new ExtensionsCommand(this);
 		
+		log.info("Loading Config File...");
 		FileConfiguration config = this.getConfig();
-		World world = this.getServer().getWorld(config.getString("world"));
-		Set<String> teams = config.getConfigurationSection("teams").getKeys(false);
-		for (String team : teams)
-		{
-			ClanNames.add(team);
-			Vector location = config.getVector("teams." + team + ".spawn");
-			spawnLocations.put(team, new Location(world, location.getX(), location.getY(), location.getZ()));
-		}
+		config.options().copyDefaults(true);
 		
-	    // Replace with config file
-	    spawnLocations.put("red", new Location(world, -1189, 50, 444));
-	    spawnLocations.put("blue", new Location(world, -943, 50, 187));
+		maxDifference = config.getInt("joinDifference");
+		log.info("joinDifference: " + maxDifference);
+		
+		World world = this.getServer().getWorld(config.getString("world"));
+		log.info("world: " + world.getName());
+		
+		Set<String> clans = config.getConfigurationSection("clans").getKeys(false);
+		log.info("Clans (" + clans.size() + "):");
+		for (String clan : clans)
+		{
+			log.info("  " + clan);
+			ClanNames.add(clan);
+			spawnLocations.put(clan, new Location(world, 
+				config.getInt("clans." + clan + ".spawn.x"),
+				config.getInt("clans." + clan + ".spawn.y"),
+				config.getInt("clans." + clan + ".spawn.z")
+			));
+		}
 		
 		log.info("SimpleClanExtensions has been enabled");
 	}
@@ -98,12 +103,15 @@ public class SimpleClansExtensions extends JavaPlugin
 				player.sendMessage(ChatColor.RED + "SimpleClans plugin not found...");
 				return true;
 			}
-			else if (args.length == 2 && args[0].equalsIgnoreCase("join") && ClanNames.contains(args[1]))
+			else if (args.length == 2 && args[0].equalsIgnoreCase("join"))
 			{
-				if (player.hasPermission("sce.join"))
-					commandManager.CommandJoin(player, args[1]);
-				else
+				/*if (!player.hasPermission("sce.join"))
 					player.sendMessage(ChatColor.RED + "You don't have permission to join teams...");
+					
+				else*/ if (!ClanNames.contains(args[1]))
+					player.sendMessage(ChatColor.RED + "The clan " + args[1] + " doesn't exist.");
+				else
+					commandManager.CommandJoin(player, args[1]);
 				return true;
 			}
 		}
