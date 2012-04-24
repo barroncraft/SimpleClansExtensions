@@ -25,7 +25,7 @@ public class ExtensionsCommand
 		
 		if (oldClan != null)
 		{
-			if (oldClan.getName().equalsIgnoreCase(newClan.getName()))
+			if (newClan != null && oldClan.getName().equalsIgnoreCase(newClan.getName()))
 				player.sendMessage(ChatColor.RED + "You can't transfer to the same team");
 			else if (PlayerDifference(oldClan, newClan) < plugin.maxDifference)
 				player.sendMessage(ChatColor.RED + "You can't transfer teams unless there is a difference of " + plugin.maxDifference + " between them");
