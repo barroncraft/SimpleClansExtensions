@@ -3,7 +3,10 @@
  * to make is easier to use in a PvP setting.  
  * 
  * Written by:
- * 	Nullreff <rsmendivil.com>
+ * Ryan Mendivil <rsmendivil.com>
+ * 
+ * Tower Management By:
+ * Dmitri Amariei <https://github.com/damariei>
  * 
  * Some code and ideas borrowed from:
  * 	Scyntrus <http://www.minecraftforum.net/user/474851-scyntrus/>
@@ -33,29 +36,47 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.managers.RegionManager;
 
 public class SimpleClansExtensions extends JavaPlugin
 {
-	public ClanManager manager;
-	public Set<String> ClanNames = new HashSet<String>();
+	public ClanManager clanManager;
+	public WorldGuardPlugin guardManager;
+	public RegionManager regionManager;
+	private ExtensionsCommand commandManager;
+	
+	public Set<String> clanNames = new HashSet<String>();
 	public Map<String, Location> spawnLocations = new HashMap<String, Location>();
 	public int maxDifference;
 	
-	private ExtensionsCommand commandManager;
-	private Logger log;
+	public Logger log;
 	
 	
 	public void onEnable()
 	{
 		log = this.getLogger();
-		Plugin clansPlugin = getServer().getPluginManager().getPlugin("SimpleClans");
+		PluginManager manager = getServer().getPluginManager();
+		
+		Plugin clansPlugin = manager.getPlugin("SimpleClans");
 	    if (clansPlugin == null)
 	    {
 	    	log.severe("SimpleClans plugin not found.  SimpleClansExtenisons was not enabled.");
 	    	return;
 	    }
-	    manager = ((SimpleClans)clansPlugin).getClanManager();
+	    
+	    Plugin guardPlugin = manager.getPlugin("WorldGuard");
+	    if (guardPlugin == null)
+	    {
+	    	log.severe("WorldGuard plugin not found.  SimpleClansExtenisons was not enabled.");
+	    	return;
+	    }
+	    
+	    clanManager = ((SimpleClans)clansPlugin).getClanManager();
+	    guardManager = (WorldGuardPlugin)guardPlugin;
 		commandManager = new ExtensionsCommand(this);
 		
 		log.info("Loading Config File...");
@@ -73,7 +94,7 @@ public class SimpleClansExtensions extends JavaPlugin
 		for (String clan : clans)
 		{
 			log.info("  " + clan);
-			ClanNames.add(clan);
+			clanNames.add(clan);
 			spawnLocations.put(clan, new Location(world, 
 				config.getInt("clans." + clan + ".spawn.x"),
 				config.getInt("clans." + clan + ".spawn.y"),
@@ -98,7 +119,7 @@ public class SimpleClansExtensions extends JavaPlugin
 		String commandName = cmd.getName();
 		if (commandName.equalsIgnoreCase("sce"))
 		{
-			if (manager == null)
+			if (clanManager == null)
 			{
 				player.sendMessage(ChatColor.RED + "SimpleClans plugin not found...");
 				return true;
@@ -108,7 +129,7 @@ public class SimpleClansExtensions extends JavaPlugin
 				/*if (!player.hasPermission("sce.join"))
 					player.sendMessage(ChatColor.RED + "You don't have permission to join teams...");
 					
-				else*/ if (!ClanNames.contains(args[1]))
+				else*/ if (!clanNames.contains(args[1]))
 					player.sendMessage(ChatColor.RED + "The clan " + args[1] + " doesn't exist.");
 				else
 					commandManager.CommandJoin(player, args[1]);
