@@ -1,12 +1,14 @@
 world: dota
-joinDifference: 2
+joinDifference: 1
 clans:
  red: 
+  baseRegion: redBase
   spawn: 
    x: -1189
    y: 50
    z: 444
  blue:
+  baseRegion: blueBase
   spawn:
    x: -943
    y: 50

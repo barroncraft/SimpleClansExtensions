@@ -51,6 +51,7 @@ public class SimpleClansExtensions extends JavaPlugin
 	
 	public Set<String> clanNames = new HashSet<String>();
 	public Map<String, Location> spawnLocations = new HashMap<String, Location>();
+	public Map<String, String> baseRegions = new HashMap<String, String>();
 	public int maxDifference;
 	
 	public Logger log;
@@ -100,7 +101,10 @@ public class SimpleClansExtensions extends JavaPlugin
 				config.getInt("clans." + clan + ".spawn.y"),
 				config.getInt("clans." + clan + ".spawn.z")
 			));
+			baseRegions.put(clan, config.getString("clans." + clan + ".baseRegion"));
 		}
+		
+		new ExtensionsListener(this, world);
 		
 		log.info("SimpleClanExtensions has been enabled");
 	}

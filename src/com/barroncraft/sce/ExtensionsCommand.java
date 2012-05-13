@@ -5,7 +5,9 @@ import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class ExtensionsCommand 
 {
@@ -43,6 +45,7 @@ public class ExtensionsCommand
 			else
 			{
 				AddPlayerToClan(clanPlayer, newClan, newClanName);
+				player.getInventory().addItem(new ItemStack(Material.STONE_SWORD, 1));
 				player.sendMessage(ChatColor.BLUE + "You have joined team " + newClanName);
 			}
 		}
