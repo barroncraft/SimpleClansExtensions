@@ -7,6 +7,7 @@ import java.util.Map;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -75,23 +76,24 @@ public class ExtensionsListener implements Listener {
 			if (redBuildings.DestroyBuilding(BuildingType.Tower, eventLoc))
 			{
 				towerCounts.put("red", redBuildings.BuildingsCount(BuildingType.Tower));
-				server.broadcastMessage(ChatColor.YELLOW + "A "+ ChatColor.RED + "RED" + ChatColor.YELLOW + " Tower Has Been Destroyed! (" + towerCounts.get("red") + " remaining)");
-
-				// Check if all towers are destroyed
 				
+				// Check if all towers are destroyed
 				if (towerCounts.get("red")  == 0) 
 					server.broadcastMessage(ChatColor.YELLOW + "All "+ ChatColor.RED + "RED" + ChatColor.YELLOW + " Towers Are Destroyed! Defend the NEXUS!");
+				else
+					server.broadcastMessage(ChatColor.YELLOW + "A "+ ChatColor.RED + "RED" + ChatColor.YELLOW + " Tower Has Been Destroyed! (" + towerCounts.get("red") + " remaining)");
 			}
 			
 			// Blue Towers
 			if (blueBuildings.DestroyBuilding(BuildingType.Tower, eventLoc))
 			{
 				towerCounts.put("blue", blueBuildings.BuildingsCount(BuildingType.Tower));
-				server.broadcastMessage(ChatColor.YELLOW + "A "+ ChatColor.BLUE + "BLUE" + ChatColor.YELLOW + " Tower Has Been Destroyed! (" + towerCounts.get("blue")  + " remaining)");
 
 				// Check if all towers are destroyed
 				if (towerCounts.get("blue") == 0) 
 					server.broadcastMessage(ChatColor.YELLOW + "All "+ ChatColor.BLUE + "BLUE" + ChatColor.YELLOW + " Towers Are Destroyed! Defend the NEXUS!");
+				else
+					server.broadcastMessage(ChatColor.YELLOW + "A "+ ChatColor.BLUE + "BLUE" + ChatColor.YELLOW + " Tower Has Been Destroyed! (" + towerCounts.get("blue")  + " remaining)");
 			}
 			
 			
@@ -128,7 +130,7 @@ public class ExtensionsListener implements Listener {
 					{
 						// TODO: Add player protection if they are in their own base
 					}
-					else if (towerCounts.get(clanName) != 0 && player.getHealth() != 0)
+					else if (towerCounts.get(clanName) != 0 && player.getHealth() != 0 && player.getGameMode() == GameMode.SURVIVAL)
 					{
 						player.sendMessage(ChatColor.YELLOW + "You are not allowed to enter the opposing team's base");
 						player.sendMessage(ChatColor.YELLOW + "until all towers have been destroyed.");
