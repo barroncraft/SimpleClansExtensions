@@ -21,17 +21,17 @@ public class ClanBuildingList
 			buildings.put(type, new HashSet<Location>());
 	}
 	
-	public void AddBuilding(BuildingType type, Location location)
+	public void addBuilding(BuildingType type, Location location)
 	{
 		buildings.get(type).add(location);
 	}
 	
-	public boolean BuildingExists(BuildingType type, Location location)
+	public boolean buildingExists(BuildingType type, Location location)
 	{
 		return buildings.get(type).contains(location);
 	}
 	
-	public boolean DestroyBuilding(BuildingType type, Location location)
+	public boolean destroyBuilding(BuildingType type, Location location)
 	{
 		Set<Location> typeBuildings = buildings.get(type);
 		for (Location tower : typeBuildings)
@@ -45,7 +45,7 @@ public class ClanBuildingList
 		return false;
 	}
 	
-	public int BuildingsCount(BuildingType type)
+	public int buildingsCount(BuildingType type)
 	{
 		return buildings.get(type).size();
 	}

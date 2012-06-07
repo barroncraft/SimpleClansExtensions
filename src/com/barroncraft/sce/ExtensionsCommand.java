@@ -55,7 +55,7 @@ public class ExtensionsCommand
 	{
 		int returnValue = 0;
 		int count = GetOnlinePlayerCount(clan);
-		for (String name : plugin.clanNames)
+		for (String name : plugin.clanTeams.keySet())
 		{
 			int clanCount = GetOnlinePlayerCount(plugin.clanManager.getClan(name));
 			int difference = count - clanCount;
@@ -79,7 +79,7 @@ public class ExtensionsCommand
 		{
 			plugin.clanManager.createClan(player.toPlayer(), clanName, clanName);
 			clan = plugin.clanManager.getClan(clanName);
-			Location location = plugin.spawnLocations.get(clanName);
+			Location location = plugin.clanTeams.get(clanName).getSpawn();
 			if (location != null)
 				clan.setHomeLocation(location);
 		}

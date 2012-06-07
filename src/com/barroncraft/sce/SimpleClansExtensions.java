@@ -20,7 +20,6 @@
 package com.barroncraft.sce;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -49,17 +48,16 @@ public class SimpleClansExtensions extends JavaPlugin
 	public RegionManager regionManager;
 	private ExtensionsCommand commandManager;
 	
-	public Set<String> clanNames = new HashSet<String>();
-	public Map<String, Location> spawnLocations = new HashMap<String, Location>();
-	public Map<String, String> baseRegions = new HashMap<String, String>();
+	public Map<String, ClanTeam> clanTeams;
 	public int maxDifference;
-	
 	public Logger log;
 	
 	
 	public void onEnable()
 	{
 		log = this.getLogger();
+		clanTeams = new HashMap<String, ClanTeam>();
+		
 		PluginManager manager = getServer().getPluginManager();
 		
 		Plugin clansPlugin = manager.getPlugin("SimpleClans");
@@ -95,13 +93,16 @@ public class SimpleClansExtensions extends JavaPlugin
 		for (String clan : clans)
 		{
 			log.info("  " + clan);
-			clanNames.add(clan);
-			spawnLocations.put(clan, new Location(world, 
-				config.getInt("clans." + clan + ".spawn.x"),
-				config.getInt("clans." + clan + ".spawn.y"),
-				config.getInt("clans." + clan + ".spawn.z")
+			clanTeams.put(clan, new ClanTeam(
+					clan, 
+					ChatColor.BLACK,
+					new Location(world, 
+							config.getInt("clans." + clan + ".spawn.x"),
+							config.getInt("clans." + clan + ".spawn.y"),
+							config.getInt("clans." + clan + ".spawn.z")
+					),
+					config.getString("clans." + clan + ".baseRegion")
 			));
-			baseRegions.put(clan, config.getString("clans." + clan + ".baseRegion"));
 		}
 		
 		new ExtensionsListener(this, world);
@@ -133,7 +134,7 @@ public class SimpleClansExtensions extends JavaPlugin
 				/*if (!player.hasPermission("sce.join"))
 					player.sendMessage(ChatColor.RED + "You don't have permission to join teams...");
 					
-				else*/ if (!clanNames.contains(args[1]))
+				else*/ if (!clanTeams.containsKey(args[1]))
 					player.sendMessage(ChatColor.RED + "The clan " + args[1] + " doesn't exist.");
 				else
 					commandManager.CommandJoin(player, args[1]);
