@@ -1,5 +1,6 @@
 world: dota
 joinDifference: 1
+maxTimeEmpty: 300
 clans:
  red: 
   baseRegion: redBase

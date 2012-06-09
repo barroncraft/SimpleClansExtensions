@@ -24,13 +24,14 @@ public class ExtensionsCommand
 		ClanPlayer clanPlayer = plugin.clanManager.getCreateClanPlayer(player.getName());
 		Clan newClan = plugin.clanManager.getClan(newClanName);
 		Clan oldClan = clanPlayer.getClan();
+		int transferDifference = plugin.maxDifference + 1;
 		
 		if (oldClan != null) // Changing clans
 		{
 			if (newClan != null && oldClan.getName().equalsIgnoreCase(newClan.getName()))
 				player.sendMessage(ChatColor.RED + "You can't transfer to the same team");
-			else if (PlayerDifference(oldClan, newClan) < plugin.maxDifference)
-				player.sendMessage(ChatColor.RED + "You can't transfer teams unless there is a difference of " + plugin.maxDifference + " between them");
+			else if (PlayerDifference(oldClan, newClan) < transferDifference)
+				player.sendMessage(ChatColor.RED + "You can't transfer teams unless there is a difference of " + transferDifference + " between them");
 			else
 			{
 				oldClan.removeMember(player.getName());

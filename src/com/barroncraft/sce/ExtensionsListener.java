@@ -17,15 +17,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import com.barroncraft.sce.ClanBuildingList.BuildingType;
 import com.sk89q.worldedit.Vector;
-import com.sk89q.worldguard.protection.managers.RegionManager;
 
 public class ExtensionsListener implements Listener {
 	SimpleClansExtensions plugin;
 	Map<String, Integer> towerCounts;
+	int resetTaskId = -1;
 	
 	public ExtensionsListener(SimpleClansExtensions plugin, World world)
 	{
@@ -72,6 +74,7 @@ public class ExtensionsListener implements Listener {
 			for (ClanTeam team : plugin.clanTeams.values())
 			{
 				ClanBuildingList buildings = team.getBuildings();
+				String teamName = team.getColor() + team.getName().toUpperCase() + ChatColor.YELLOW;
 				
 				// Towers
 				if (buildings.destroyBuilding(BuildingType.Tower, eventLoc))
@@ -80,18 +83,18 @@ public class ExtensionsListener implements Listener {
 					
 					// Check if all towers are destroyed
 					if (towerCounts.get(team.getName()) == 0) 
-						server.broadcastMessage(ChatColor.YELLOW + "All "+ team.getColor() + team.getName().toUpperCase() + ChatColor.YELLOW + " Towers Are Destroyed! Defend the NEXUS!");
+						server.broadcastMessage(ChatColor.YELLOW + "All "+ teamName + " Towers Are Destroyed! Defend the NEXUS!");
 					else
-						server.broadcastMessage(ChatColor.YELLOW + "A "+ team.getColor() + team.getName().toUpperCase() + ChatColor.YELLOW + " Tower Has Been Destroyed! (" + towerCounts.get(team.getName()) + " remaining)");
+						server.broadcastMessage(ChatColor.YELLOW + "A "+ teamName + " Tower Has Been Destroyed! (" + towerCounts.get(team.getName()) + " remaining)");
 				}
 				
 				// Nexus
 				if (buildings.destroyBuilding(BuildingType.Nexus, eventLoc))
 				{
-					server.broadcastMessage(team.getColor() + "The " + team.getName().toUpperCase() + " NEXUS Has Been Destroyed!  Game over.");
+					server.broadcastMessage(ChatColor.YELLOW + "The " + teamName + " NEXUS Has Been Destroyed!  Game over.");
 					
-					if (ServerReloader.FlagForReload())
-						server.broadcastMessage(ChatColor.YELLOW + "The map will reset within 5 minuts.");
+					if (ServerReloader.SetReloadFlag(true))
+						server.broadcastMessage(ChatColor.YELLOW + "The map should auto reset within a few minutes.");
 					else
 						server.broadcastMessage(ChatColor.YELLOW + "There was an issue resetting the map.");
 				}
@@ -101,22 +104,29 @@ public class ExtensionsListener implements Listener {
 	}
 	
 	@EventHandler(priority = EventPriority.HIGH)
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public void onPlayerMove(PlayerMoveEvent event) 
+	{
 		Player player = event.getPlayer();
 		ClanPlayer clanPlayer = plugin.clanManager.getCreateClanPlayer(player.getName());
-		Vector pt = new Vector(event.getTo().getBlockX(), event.getTo().getBlockY(), event.getTo().getBlockZ());
-		World world = player.getWorld();
+		String clanName = clanPlayer != null 
+			? clanPlayer.getClan().getName()
+			: null;
+		Vector pt = new Vector(
+			event.getTo().getBlockX(), 
+			event.getTo().getBlockY(), 
+			event.getTo().getBlockZ()
+		);
+		List<String> regionNames = plugin.guardManager.getGlobalRegionManager()
+										 			  .get(player.getWorld())
+										 			  .getApplicableRegionsIDs(pt);
 		
-		RegionManager regions = plugin.guardManager.getGlobalRegionManager().get(world);
-		List<String> regionNames = regions.getApplicableRegionsIDs(pt);
-		
-		for (String foundName : regionNames)
+		for (ClanTeam team : plugin.clanTeams.values())
 		{
-			for (ClanTeam team : plugin.clanTeams.values())
+			for (String foundName : regionNames)
 			{
 				if (foundName.equalsIgnoreCase(team.getBaseRegion()))
 				{
-					if (clanPlayer != null && clanPlayer.getClan().getName().equalsIgnoreCase(team.getName()))
+					if (clanName != null && clanName.equalsIgnoreCase(team.getName()))
 					{
 						// TODO: Add player protection if they are in their own base
 					}
@@ -133,4 +143,28 @@ public class ExtensionsListener implements Listener {
 		}
 	}
 	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerJoin(PlayerJoinEvent event) 
+	{
+		if (resetTaskId != -1)
+		{
+			ServerReloader.SetReloadFlag(false);
+			plugin.getServer().getScheduler().cancelTask(resetTaskId);
+		}
+		  
+	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onPlayerQuit(PlayerQuitEvent event) 
+	{
+		if (plugin.getServer().getOnlinePlayers().length == 0)
+		{
+			if (resetTaskId != -1)
+				plugin.getServer().getScheduler().cancelTask(resetTaskId);
+		  
+			resetTaskId = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+				public void run() { ServerReloader.SetReloadFlag(true); }
+			}, plugin.maxTimeEmpty); // If everyone is offline for too long, the redstone glitches out.
+		}
+	}
 }

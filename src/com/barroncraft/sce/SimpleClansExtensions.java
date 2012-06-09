@@ -50,6 +50,7 @@ public class SimpleClansExtensions extends JavaPlugin
 	
 	public Map<String, ClanTeam> clanTeams;
 	public int maxDifference;
+	public long maxTimeEmpty;
 	public Logger log;
 	
 	
@@ -85,6 +86,9 @@ public class SimpleClansExtensions extends JavaPlugin
 		maxDifference = config.getInt("joinDifference");
 		log.info("joinDifference: " + maxDifference);
 		
+		maxTimeEmpty = config.getLong("maxTimeEmpty") * 1000;
+		log.info("maxTimeEmpty: " + maxTimeEmpty);
+		
 		World world = this.getServer().getWorld(config.getString("world"));
 		log.info("world: " + world.getName());
 		
@@ -95,7 +99,7 @@ public class SimpleClansExtensions extends JavaPlugin
 			log.info("  " + clan);
 			clanTeams.put(clan, new ClanTeam(
 					clan, 
-					ChatColor.BLACK,
+					ChatColor.valueOf(clan.toUpperCase()),
 					new Location(world, 
 							config.getInt("clans." + clan + ".spawn.x"),
 							config.getInt("clans." + clan + ".spawn.y"),

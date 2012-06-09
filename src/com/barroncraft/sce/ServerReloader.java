@@ -5,20 +5,26 @@ import java.io.IOException;
 
 public class ServerReloader 
 {
-	public static boolean FlagForReload()
+	public static boolean SetReloadFlag(boolean reset)
 	{
 		File resetFile = new File("reset-required");
-		if (!resetFile.exists())
+		boolean fileExists = resetFile.exists();
+		try
 		{
-			try
-			{
-				resetFile.createNewFile();
-			} 
-			catch(IOException e)
-			{
-				return false;
-			}
+			return 
+			(
+				reset && !fileExists && 
+				resetFile.createNewFile()
+			) 
+			||
+			(
+				!reset && fileExists && 
+				resetFile.delete()
+			);
+		} 
+		catch(IOException e)
+		{
+			return false;
 		}
-		return true;
 	}
 }
