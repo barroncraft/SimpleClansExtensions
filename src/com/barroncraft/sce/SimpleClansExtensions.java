@@ -105,7 +105,8 @@ public class SimpleClansExtensions extends JavaPlugin
 							config.getInt("clans." + clan + ".spawn.y"),
 							config.getInt("clans." + clan + ".spawn.z")
 					),
-					config.getString("clans." + clan + ".baseRegion")
+					config.getString("clans." + clan + ".baseRegion"),
+					config.getString("clans." + clan + ".spawnRegion")
 			));
 		}
 		

@@ -17,17 +17,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-
 import com.barroncraft.sce.ClanBuildingList.BuildingType;
 import com.sk89q.worldedit.Vector;
 
 public class ExtensionsListener implements Listener {
 	SimpleClansExtensions plugin;
 	Map<String, Integer> towerCounts;
-	int resetTaskId = -1;
 	
 	public ExtensionsListener(SimpleClansExtensions plugin, World world)
 	{
@@ -103,68 +99,63 @@ public class ExtensionsListener implements Listener {
 		
 	}
 	
-	@EventHandler(priority = EventPriority.HIGH)
+	@EventHandler(priority = EventPriority.LOW)
     public void onPlayerMove(PlayerMoveEvent event) 
 	{
 		Player player = event.getPlayer();
+		if (player.getHealth() == 0 || player.getGameMode() != GameMode.SURVIVAL)
+			return;
+		
 		ClanPlayer clanPlayer = plugin.clanManager.getCreateClanPlayer(player.getName());
-		String clanName = clanPlayer != null 
+		String clanName = clanPlayer != null && clanPlayer.getClan() != null
 			? clanPlayer.getClan().getName()
 			: null;
+		if (clanName == null)
+			return;
+		
 		Vector pt = new Vector(
 			event.getTo().getBlockX(), 
 			event.getTo().getBlockY(), 
 			event.getTo().getBlockZ()
 		);
+		
 		List<String> regionNames = plugin.guardManager.getGlobalRegionManager()
 										 			  .get(player.getWorld())
 										 			  .getApplicableRegionsIDs(pt);
 		
 		for (ClanTeam team : plugin.clanTeams.values())
 		{
-			for (String foundName : regionNames)
+			String teamName = team.getName();
+			
+			if (!clanName.equalsIgnoreCase(teamName))
 			{
-				if (foundName.equalsIgnoreCase(team.getBaseRegion()))
+				String baseRegionName = team.getBaseRegion();
+				String spawnRegionName = team.getSpawnRegion();
+				boolean towersUp = towerCounts.get(teamName) != 0;
+				
+				for (String foundName : regionNames)
 				{
-					if (clanName != null && clanName.equalsIgnoreCase(team.getName()))
+					boolean inSpawn = foundName.equalsIgnoreCase(spawnRegionName);
+					boolean inBase = towersUp && foundName.equalsIgnoreCase(baseRegionName);
+					
+					if (inSpawn)
 					{
-						// TODO: Add player protection if they are in their own base
+						player.sendMessage(ChatColor.YELLOW + "You are not allowed to enter the opposing team's spawn");
+						player.sendMessage(ChatColor.YELLOW + "Go kill the nexus instead.");
 					}
-					else if (towerCounts.get(team.getName()) != 0 && player.getHealth() != 0 && player.getGameMode() == GameMode.SURVIVAL)
+					else if (inBase)
 					{
 						player.sendMessage(ChatColor.YELLOW + "You are not allowed to enter the opposing team's base");
 						player.sendMessage(ChatColor.YELLOW + "until all towers have been destroyed.");
-						player.setHealth(0); // Spawn campers must DIE!!!!!
 					}
 					
-					return;
+					if (inSpawn || inBase)
+					{
+						player.setHealth(0); // Spawn campers must DIE!!!!!
+						return;	
+					}
 				}
 			}
-		}
-	}
-	
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onPlayerJoin(PlayerJoinEvent event) 
-	{
-		if (resetTaskId != -1)
-		{
-			ServerReloader.SetReloadFlag(false);
-			plugin.getServer().getScheduler().cancelTask(resetTaskId);
-		}
-		  
-	}
-	
-	@EventHandler(priority = EventPriority.LOWEST)
-	public void onPlayerQuit(PlayerQuitEvent event) 
-	{
-		if (plugin.getServer().getOnlinePlayers().length == 0)
-		{
-			if (resetTaskId != -1)
-				plugin.getServer().getScheduler().cancelTask(resetTaskId);
-		  
-			resetTaskId = plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
-				public void run() { ServerReloader.SetReloadFlag(true); }
-			}, plugin.maxTimeEmpty); // If everyone is offline for too long, the redstone glitches out.
 		}
 	}
 }
