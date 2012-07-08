@@ -11,12 +11,15 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import com.barroncraft.sce.ClanBuildingList.BuildingType;
 import com.sk89q.worldedit.Vector;
@@ -97,6 +100,18 @@ public class ExtensionsListener implements Listener {
 			}
 		}
 		
+	}
+	
+	public void OnPlayerInteract(PlayerInteractEvent event)
+	{
+		Action action = event.getAction();
+		if (action == Action.PHYSICAL) // Pressure plate
+		{
+			Block block = event.getClickedBlock();
+			Location blockLocation = block.getLocation();
+			
+			
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.LOW)
