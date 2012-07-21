@@ -102,18 +102,6 @@ public class ExtensionsListener implements Listener {
 		
 	}
 	
-	public void OnPlayerInteract(PlayerInteractEvent event)
-	{
-		Action action = event.getAction();
-		if (action == Action.PHYSICAL) // Pressure plate
-		{
-			Block block = event.getClickedBlock();
-			Location blockLocation = block.getLocation();
-			
-			
-		}
-	}
-	
 	@EventHandler(priority = EventPriority.LOW)
     public void onPlayerMove(PlayerMoveEvent event) 
 	{
