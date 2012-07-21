@@ -1,5 +1,10 @@
 package com.barroncraft.sce;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import net.sacredlabyrinth.phaed.simpleclans.Clan;
 import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 
@@ -11,12 +16,13 @@ import org.bukkit.inventory.ItemStack;
 
 public class ExtensionsCommand 
 {
-	
 	SimpleClansExtensions plugin;
+	Set<String> surrenderPlayers;
 	
 	public ExtensionsCommand(SimpleClansExtensions plugin)
 	{
 		this.plugin = plugin;
+		this.surrenderPlayers = new HashSet<String>();
 	}
 	
 	public void CommandJoin(Player player, String newClanName)
@@ -49,6 +55,55 @@ public class ExtensionsCommand
 				player.getInventory().addItem(new ItemStack(Material.STONE_SWORD, 1));
 				player.sendMessage(ChatColor.BLUE + "You have joined team " + newClanName);
 			}
+		}
+	}
+	
+	public void CommandSurrender(Player player) 
+	{
+		String playerName = player.getName();
+		Clan currentClan = plugin.clanManager.getCreateClanPlayer(playerName).getClan();
+		
+		if (currentClan == null)
+		{
+			player.sendMessage(ChatColor.RED + "You can't surrender until you join a team");
+			return;
+		}
+		
+		if (!surrenderPlayers.contains(playerName))
+		{
+			surrenderPlayers.add(playerName);
+			
+			List<ClanPlayer> currentClanPlayers = currentClan.getOnlineMembers();
+			List<ClanPlayer> surrenderingPlayers = new ArrayList<ClanPlayer>();
+			
+			for (ClanPlayer clanPlayer : currentClan.getOnlineMembers())
+			{
+				if (surrenderPlayers.contains(clanPlayer.getName()))
+					surrenderingPlayers.add(clanPlayer);
+			}
+			
+			float surrenderRatio = ((float)currentClanPlayers.size()) / ((float)surrenderingPlayers.size());
+			
+			if (surrenderRatio >= 0.66)
+			{
+				ClanTeam team = plugin.clanTeams.get(currentClan.getName());
+				String teamName = team.getColor() + team.getName().toUpperCase() + ChatColor.YELLOW;
+				plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The " + teamName + " team has agreed to surrender.  Game over.");
+				if (ServerReloader.SetReloadFlag(true))
+					plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The map should auto reset within a few minutes.");
+				else
+					plugin.getServer().broadcastMessage(ChatColor.YELLOW + "There was an issue resetting the map.");
+			}
+			else
+			{
+				player.sendMessage(ChatColor.YELLOW + "You have been added to the list of people wishing to surrender. (" + Math.floor(surrenderRatio * 100) + "% so far)");
+				player.sendMessage(ChatColor.YELLOW + "To remove your surrender vote type /surrender again.");
+			}
+		}
+		else
+		{
+			surrenderPlayers.remove(playerName);
+			player.sendMessage(ChatColor.YELLOW + "You have been removed from the list of people wanting to surrender.");
 		}
 	}
 	
@@ -102,4 +157,6 @@ public class ExtensionsCommand
 		}
 		return count;
 	}
+
+	
 }
