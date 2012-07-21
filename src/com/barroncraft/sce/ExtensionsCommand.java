@@ -86,13 +86,13 @@ public class ExtensionsCommand
 			
 			if (surrenderRatio >= 0.66)
 			{
-				ClanTeam team = plugin.clanTeams.get(currentClan.getName());
-				String teamName = team.getColor() + team.getName().toUpperCase() + ChatColor.YELLOW;
-				plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The " + teamName + " team has agreed to surrender.  Game over.");
 				if (ServerReloader.SetReloadFlag(true))
+				{
+					ClanTeam team = plugin.clanTeams.get(currentClan.getName());
+					String teamName = team.getColor() + team.getName().toUpperCase() + ChatColor.YELLOW;
+					plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The " + teamName + " team has agreed to surrender.  Game over.");
 					plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The map should auto reset within a few minutes.");
-				else
-					plugin.getServer().broadcastMessage(ChatColor.YELLOW + "There was an issue resetting the map.");
+				}
 			}
 			else
 			{
