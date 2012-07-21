@@ -3,7 +3,7 @@
  * to make is easier to use in a PvP setting.  
  * 
  * Written by:
- * Ryan Mendivil <rsmendivil.com>
+ * Ryan Mendivil <http://nullreff.net>
  * 
  * Tower Management By:
  * Dmitri Amariei <https://github.com/damariei>
