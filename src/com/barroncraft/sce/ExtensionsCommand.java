@@ -82,9 +82,9 @@ public class ExtensionsCommand
 					surrenderingPlayers.add(clanPlayer);
 			}
 			
-			float surrenderRatio = ((float)surrenderingPlayers.size()) / ((float)currentClanPlayers.size());
+			double surrenderRatio = ((double)surrenderingPlayers.size()) / ((double)currentClanPlayers.size());
 			
-			if (surrenderRatio >= 0.66)
+			if (surrenderRatio > 0.66d)
 			{
 				if (ServerReloader.SetReloadFlag(true))
 				{
