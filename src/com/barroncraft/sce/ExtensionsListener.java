@@ -89,7 +89,7 @@ public class ExtensionsListener implements Listener {
 				{
 					server.broadcastMessage(ChatColor.YELLOW + "The " + teamName + " NEXUS Has Been Destroyed!  Game over.");
 					
-					if (ServerReloader.SetReloadFlag(true))
+					if (ServerResetter.enableResetFlag())
 						server.broadcastMessage(ChatColor.YELLOW + "The map should auto reset within a few minutes.");
 					else
 						server.broadcastMessage(ChatColor.YELLOW + "There was an issue resetting the map.");
