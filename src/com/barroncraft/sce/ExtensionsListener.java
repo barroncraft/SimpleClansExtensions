@@ -11,13 +11,18 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.Minecart;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import com.barroncraft.sce.ClanBuildingList.BuildingType;
 import com.sk89q.worldedit.Vector;
 
@@ -98,6 +103,18 @@ public class ExtensionsListener implements Listener {
 		}
 		
 	}
+
+    public void onVehicleDestroy(VehicleDestroyEvent event)
+    {
+        Vehicle vehicle = event.getVehicle();
+        if (vehicle.getType() != EntityType.MINECART)
+            return;
+
+        Minecart cart = (Minecart)vehicle;
+        Block block = cart.getLocation().getBlock();
+        if (block.getType() == Material.DETECTOR_RAIL)
+            block.breakNaturally();
+    }
 	
 	@EventHandler(priority = EventPriority.LOW)
     public void onPlayerMove(PlayerMoveEvent event) 
