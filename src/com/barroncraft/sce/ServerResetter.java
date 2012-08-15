@@ -22,7 +22,7 @@ public class ServerResetter
         return resetFlag(false);
     }
 
-    public static boolean setResetFlag(boolean reset)
+    public static boolean resetFlag(boolean reset)
     {
 		File resetFile = new File(FileName);
         if (resetFile.exists() == reset)
