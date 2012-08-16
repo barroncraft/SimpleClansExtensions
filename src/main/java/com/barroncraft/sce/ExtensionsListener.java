@@ -104,6 +104,7 @@ public class ExtensionsListener implements Listener {
 		
 	}
 
+	@EventHandler
     public void onVehicleDestroy(VehicleDestroyEvent event)
     {
         Vehicle vehicle = event.getVehicle();
@@ -111,9 +112,14 @@ public class ExtensionsListener implements Listener {
             return;
 
         Minecart cart = (Minecart)vehicle;
-        Location location = cart.getLocation().getBlock();
-        if (block.getType() == Material.DETECTOR_RAIL)
-            block.breakNaturally();
+        Location location = cart.getLocation();
+        Block block1 = location.getBlock();
+        Block block2 = location.add(0, -1, 0).getBlock();
+        if (block1.getType() == Material.DETECTOR_RAIL)
+        {
+            block1.breakNaturally();
+            block2.breakNaturally();
+        }
     }
 	
 	@EventHandler(priority = EventPriority.LOW)
