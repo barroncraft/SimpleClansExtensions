@@ -111,7 +111,7 @@ public class ExtensionsListener implements Listener {
             return;
 
         Minecart cart = (Minecart)vehicle;
-        Block block = cart.getLocation().getBlock();
+        Location location = cart.getLocation().getBlock();
         if (block.getType() == Material.DETECTOR_RAIL)
             block.breakNaturally();
     }
