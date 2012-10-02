@@ -25,6 +25,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import com.barroncraft.sce.ClanBuildingList.BuildingType;
 import com.sk89q.worldedit.Vector;
+import org.kitteh.tag.TagAPI;
+import org.kitteh.tag.PlayerReceiveNameTagEvent;
 
 public class ExtensionsListener implements Listener {
 	SimpleClansExtensions plugin;
@@ -181,4 +183,23 @@ public class ExtensionsListener implements Listener {
 			}
 		}
 	}
+
+    @EventHandler
+    public void onNameTag(PlayerReceiveNameTagEvent event)
+    {
+        String namedPlayerName   = event.getNamedPlayer().getName();
+        ClanPlayer namedPlayer   = plugin.clanManager.getCreateClanPlayer(namedPlayerName);
+        ClanPlayer viewingPlayer = plugin.clanManager.getCreateClanPlayer(event.getPlayer().getName());
+        
+        if (viewingPlayer == null || namedPlayer == null || viewingPlayer.getClan() == null || namedPlayer.getClan() == null)
+            return;
+       
+        String viewingPlayerClan = viewingPlayer.getClan().getName();
+        String namedPlayerClan   = namedPlayer.getClan().getName(); 
+
+        if (viewingPlayerClan.equalsIgnoreCase(namedPlayerClan))
+            event.setTag(ChatColor.GREEN + namedPlayerName);
+        else
+            event.setTag(ChatColor.RED + namedPlayerName);
+    }
 }
