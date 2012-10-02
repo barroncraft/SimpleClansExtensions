@@ -24,6 +24,11 @@ SimpleClansExtension is available under the GNU General Public License v3
             <id>sk89q-mvn2</id>
             <url>http://mvn2.sk89q.com/repo</url>
         </repository>
+        <!-- TagAPI Repo -->
+        <repository>
+            <id>kitteh-repo</id>
+            <url>http://repo.kitteh.org/content/groups/public</url>
+        </repository>
         <!-- Repository for Bukkit -->
         <repository>
             <id>bukkit-repo</id>
@@ -40,6 +45,12 @@ SimpleClansExtension is available under the GNU General Public License v3
             <groupId>net.sacredlabyrinth.phaed.simpleclans</groupId>
             <artifactId>SimpleClans</artifactId>
             <version>2.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kitteh</groupId>
+            <artifactId>tagapi</artifactId>
+            <version>[1.4,)</version>
+            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
