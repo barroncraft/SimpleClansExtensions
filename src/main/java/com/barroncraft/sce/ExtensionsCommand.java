@@ -141,9 +141,7 @@ public class ExtensionsCommand
 				clan.setHomeLocation(location);
 		}
 		clan.addPlayerToClan(player);
-		Player p = player.toPlayer();
-		p.teleport(clan.getHomeLocation());
-		p.setPlayerListName(ChatColor.valueOf(clan.getName())+p.getName());
+		player.toPlayer().teleport(clan.getHomeLocation());
 	}
 	
 	private int GetOnlinePlayerCount(Clan clan)
