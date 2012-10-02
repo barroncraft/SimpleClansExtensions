@@ -13,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.kitteh.tag.TagAPI;
 
 public class ExtensionsCommand 
 {
@@ -142,6 +143,7 @@ public class ExtensionsCommand
 		}
 		clan.addPlayerToClan(player);
 		player.toPlayer().teleport(clan.getHomeLocation());
+        TagAPI.refreshPlayer(player.toPlayer());
 	}
 	
 	private int GetOnlinePlayerCount(Clan clan)
