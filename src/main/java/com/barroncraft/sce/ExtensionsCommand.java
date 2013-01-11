@@ -28,10 +28,10 @@ public class ExtensionsCommand
 
     public void CommandJoin(Player player, String newClanName)
     {
-        ClanPlayer clanPlayer = plugin.clanManager.getCreateClanPlayer(player.getName());
-        Clan newClan = plugin.clanManager.getClan(newClanName);
+        ClanPlayer clanPlayer = plugin.getClanManager().getCreateClanPlayer(player.getName());
+        Clan newClan = plugin.getClanManager().getClan(newClanName);
         Clan oldClan = clanPlayer.getClan();
-        int transferDifference = plugin.maxDifference + 1;
+        int transferDifference = plugin.getMaxDifference() + 1;
 
         if (oldClan != null) // Changing clans
         {
@@ -48,7 +48,7 @@ public class ExtensionsCommand
         } 
         else // Joining a clan for the first time
         {
-            if (PlayerDifference(newClan, plugin.maxDifference) >= plugin.maxDifference)
+            if (PlayerDifference(newClan, plugin.getMaxDifference()) >= plugin.getMaxDifference())
                 player.sendMessage(ChatColor.RED + "That team already has too many players.  Try a different one.");
             else
             {
@@ -62,7 +62,7 @@ public class ExtensionsCommand
     public void CommandSurrender(Player player) 
     {
         String playerName = player.getName();
-        Clan currentClan = plugin.clanManager.getCreateClanPlayer(playerName).getClan();
+        Clan currentClan = plugin.getClanManager().getCreateClanPlayer(playerName).getClan();
 
         if (currentClan == null)
         {
@@ -90,7 +90,7 @@ public class ExtensionsCommand
                 if (!ServerResetter.getResetFlag())
                 {
                     ServerResetter.enableResetFlag();
-                    ClanTeam team = plugin.clanTeams.get(currentClan.getName());
+                    ClanTeam team = plugin.getClanTeams().get(currentClan.getName());
                     String teamName = team.getColor() + team.getName().toUpperCase() + ChatColor.YELLOW;
                     plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The " + teamName + " team has agreed to surrender.  Game over.");
                     plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The map should auto reset within a few minutes.");
@@ -113,9 +113,9 @@ public class ExtensionsCommand
     {
         int returnValue = 0;
         int count = GetOnlinePlayerCount(clan);
-        for (String name : plugin.clanTeams.keySet())
+        for (String name : plugin.getClanTeams().keySet())
         {
-            int clanCount = GetOnlinePlayerCount(plugin.clanManager.getClan(name));
+            int clanCount = GetOnlinePlayerCount(plugin.getClanManager().getClan(name));
             int difference = count - clanCount;
             if (difference >= max)
                 return difference;
@@ -135,9 +135,9 @@ public class ExtensionsCommand
     {
         if (clan == null)
         {
-            plugin.clanManager.createClan(player.toPlayer(), clanName, clanName);
-            clan = plugin.clanManager.getClan(clanName);
-            Location location = plugin.clanTeams.get(clanName).getSpawn();
+            plugin.getClanManager().createClan(player.toPlayer(), clanName, clanName);
+            clan = plugin.getClanManager().getClan(clanName);
+            Location location = plugin.getClanTeams().get(clanName).getSpawn();
             if (location != null)
                 clan.setHomeLocation(location);
         }

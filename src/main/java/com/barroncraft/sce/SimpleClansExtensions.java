@@ -43,15 +43,15 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 
 public class SimpleClansExtensions extends JavaPlugin
 {
-    public ClanManager clanManager;
-    public WorldGuardPlugin guardManager;
-    public RegionManager regionManager;
+    private ClanManager clanManager;
+    private WorldGuardPlugin guardManager;
+    private RegionManager regionManager;
     private ExtensionsCommand commandManager;
 
-    public Map<String, ClanTeam> clanTeams;
-    public int maxDifference;
-    public long maxTimeEmpty;
-    public Logger log;
+    private Map<String, ClanTeam> clanTeams;
+    private int maxDifference;
+    private long maxTimeEmpty;
+    private Logger log;
 
 
     public void onEnable()
@@ -156,5 +156,13 @@ public class SimpleClansExtensions extends JavaPlugin
         return false;
     }
 
+    public ClanManager getClanManager() { return clanManager; }
+    public WorldGuardPlugin getGuardManager() { return guardManager; }
+    public RegionManager getRegionManager() { return regionManager; }
+    public ExtensionsCommand getCommandManager() { return commandManager; }
 
+    public Map<String, ClanTeam> getClanTeams() { return clanTeams; }
+    public int getMaxDifference() { return maxDifference; }
+    public long getMaxTimeEmpty() { return maxTimeEmpty; }
+    public Logger getLog() { return log; }
 }

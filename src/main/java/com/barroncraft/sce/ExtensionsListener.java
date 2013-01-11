@@ -43,7 +43,7 @@ public class ExtensionsListener implements Listener {
 
     private void loadRedBuildingLocs(World world) 
     {
-        ClanBuildingList redBuildings = plugin.clanTeams.get("red").getBuildings();
+        ClanBuildingList redBuildings = plugin.getClanTeams().get("red").getBuildings();
         redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1189, 53, 347));
         redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1190, 53, 257));
         redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1089, 53, 458));
@@ -55,7 +55,7 @@ public class ExtensionsListener implements Listener {
 
     private void loadBlueTowerLocs(World world) 
     {
-        ClanBuildingList blueBuildings = plugin.clanTeams.get("blue").getBuildings();
+        ClanBuildingList blueBuildings = plugin.getClanTeams().get("blue").getBuildings();
         blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -1046, 53, 184));
         blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -1134, 53, 194));
         blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -939, 53, 288));
@@ -74,7 +74,7 @@ public class ExtensionsListener implements Listener {
             Location eventLoc = event.getLocation();
             Server server = plugin.getServer();
 
-            for (ClanTeam team : plugin.clanTeams.values())
+            for (ClanTeam team : plugin.getClanTeams().values())
             {
                 ClanBuildingList buildings = team.getBuildings();
                 String teamName = team.getColor() + team.getName().toUpperCase() + ChatColor.YELLOW;
@@ -131,7 +131,7 @@ public class ExtensionsListener implements Listener {
             if (player.getHealth() == 0 || player.getGameMode() != GameMode.SURVIVAL)
                 return;
 
-            ClanPlayer clanPlayer = plugin.clanManager.getCreateClanPlayer(player.getName());
+            ClanPlayer clanPlayer = plugin.getClanManager().getCreateClanPlayer(player.getName());
             String clanName = clanPlayer != null && clanPlayer.getClan() != null
                 ? clanPlayer.getClan().getName()
                 : null;
@@ -144,11 +144,11 @@ public class ExtensionsListener implements Listener {
                     event.getTo().getBlockZ()
                     );
 
-            List<String> regionNames = plugin.guardManager.getGlobalRegionManager()
+            List<String> regionNames = plugin.getGuardManager().getGlobalRegionManager()
                 .get(player.getWorld())
                 .getApplicableRegionsIDs(pt);
 
-            for (ClanTeam team : plugin.clanTeams.values())
+            for (ClanTeam team : plugin.getClanTeams().values())
             {
                 String teamName = team.getName();
 
@@ -188,8 +188,8 @@ public class ExtensionsListener implements Listener {
     public void onNameTag(PlayerReceiveNameTagEvent event)
     {
         String namedPlayerName   = event.getNamedPlayer().getName();
-        ClanPlayer namedPlayer   = plugin.clanManager.getCreateClanPlayer(namedPlayerName);
-        ClanPlayer viewingPlayer = plugin.clanManager.getCreateClanPlayer(event.getPlayer().getName());
+        ClanPlayer namedPlayer   = plugin.getClanManager().getCreateClanPlayer(namedPlayerName);
+        ClanPlayer viewingPlayer = plugin.getClanManager().getCreateClanPlayer(event.getPlayer().getName());
 
         if (viewingPlayer == null || namedPlayer == null || viewingPlayer.getClan() == null || namedPlayer.getClan() == null)
             return;
