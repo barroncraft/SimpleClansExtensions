@@ -51,6 +51,7 @@ public class SimpleClansExtensions extends JavaPlugin
     private Map<String, ClanTeam> clanTeams;
     private int maxDifference;
     private long maxTimeEmpty;
+    private boolean teamBalancing;
     private Logger log;
 
 
@@ -89,6 +90,9 @@ public class SimpleClansExtensions extends JavaPlugin
 
         maxTimeEmpty = config.getLong("maxTimeEmpty") * 1000;
         log.info("maxTimeEmpty: " + maxTimeEmpty);
+
+        teamBalancing = config.getBoolean("teamBalancing");
+        log.info("teamBalancing: " + teamBalancing);
 
         World world = this.getServer().getWorld(config.getString("world"));
         log.info("world: " + world.getName());
@@ -164,5 +168,6 @@ public class SimpleClansExtensions extends JavaPlugin
     public Map<String, ClanTeam> getClanTeams() { return clanTeams; }
     public int getMaxDifference() { return maxDifference; }
     public long getMaxTimeEmpty() { return maxTimeEmpty; }
+    public boolean teamBalancingEnabled() { return teamBalancing; }
     public Logger getLog() { return log; }
 }

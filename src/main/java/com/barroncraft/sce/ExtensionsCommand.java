@@ -31,13 +31,14 @@ public class ExtensionsCommand
         ClanPlayer clanPlayer = plugin.getClanManager().getCreateClanPlayer(player.getName());
         Clan newClan = plugin.getClanManager().getClan(newClanName);
         Clan oldClan = clanPlayer.getClan();
-        int transferDifference = plugin.getMaxDifference() + 1;
+        int maxDifference = plugin.getMaxDifference();
+        int transferDifference = maxDifference + 1;
 
         if (oldClan != null) // Changing clans
         {
             if (newClan != null && oldClan.getName().equalsIgnoreCase(newClan.getName()))
                 player.sendMessage(ChatColor.RED + "You can't transfer to the same team");
-            else if (PlayerDifference(oldClan, newClan) < transferDifference)
+            else if (plugin.teamBalancingEnabled() && PlayerDifference(oldClan, newClan) < transferDifference)
                 player.sendMessage(ChatColor.RED + "You can't transfer teams unless there is a difference of " + transferDifference + " between them");
             else
             {
@@ -48,7 +49,7 @@ public class ExtensionsCommand
         } 
         else // Joining a clan for the first time
         {
-            if (PlayerDifference(newClan, plugin.getMaxDifference()) >= plugin.getMaxDifference())
+            if (plugin.teamBalancingEnabled() && PlayerDifference(newClan, maxDifference) >= maxDifference)
                 player.sendMessage(ChatColor.RED + "That team already has too many players.  Try a different one.");
             else
             {
