@@ -82,6 +82,7 @@ public class SimpleClansExtensions extends JavaPlugin
         log.info("Loading Config File...");
         FileConfiguration config = this.getConfig();
         config.options().copyDefaults(true);
+        this.saveConfig();
 
         maxDifference = config.getInt("joinDifference");
         log.info("joinDifference: " + maxDifference);
