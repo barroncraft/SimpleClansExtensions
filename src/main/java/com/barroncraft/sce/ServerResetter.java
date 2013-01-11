@@ -12,10 +12,10 @@ public class ServerResetter
         return new File(FileName).exists();
     }
 
-	public static boolean enableResetFlag()
-	{
+    public static boolean enableResetFlag()
+    {
         return resetFlag(true);
-	}
+    }
 
     public static boolean clearResetFlag()
     {
@@ -24,22 +24,22 @@ public class ServerResetter
 
     public static boolean resetFlag(boolean reset)
     {
-		File resetFile = new File(FileName);
+        File resetFile = new File(FileName);
         if (resetFile.exists() == reset)
             return true;
 
-		try
-		{
+        try
+        {
             if (reset)
                 return resetFile.createNewFile();
             else
                 return resetFile.delete();
 
-		} 
-		catch(IOException e)
-		{
-			return false;
-		}
+        } 
+        catch(IOException e)
+        {
+            return false;
+        }
 
     }
 }
