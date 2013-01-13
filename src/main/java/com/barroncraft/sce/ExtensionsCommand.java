@@ -46,7 +46,7 @@ public class ExtensionsCommand
             {
                 oldClan.removeMember(player.getName());
                 AddPlayerToClan(clanPlayer, newClan, newClanName);
-                player.sendMessage(ChatColor.BLUE + "You have been transfered to team " + newClanName);
+                plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + " has transfered to team " + newClanName);
             }
         } 
         else // Joining a clan for the first time
@@ -57,7 +57,7 @@ public class ExtensionsCommand
             {
                 AddPlayerToClan(clanPlayer, newClan, newClanName);
                 player.getInventory().addItem(new ItemStack(Material.STONE_SWORD, 1));
-                player.sendMessage(ChatColor.BLUE + "You have joined team " + newClanName);
+                plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + " has joined team " + newClanName);
             }
         }
     }
