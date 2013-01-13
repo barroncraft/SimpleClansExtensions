@@ -155,6 +155,11 @@ public class SimpleClansExtensions extends JavaPlugin
                 commandManager.CommandSurrender(player);
                 return true;
             }
+            else if (args.length == 1 && args[0].equalsIgnoreCase("towers"))
+            {
+                commandManager.CommandTowers(player);
+                return true;
+            }
         }
 
         return false;

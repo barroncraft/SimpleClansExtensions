@@ -1,5 +1,7 @@
 package com.barroncraft.sce;
 
+import com.barroncraft.sce.ClanBuildingList.BuildingType;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -107,6 +109,70 @@ public class ExtensionsCommand
         {
             surrenderPlayers.remove(playerName);
             player.sendMessage(ChatColor.YELLOW + "You have been removed from the list of people wanting to surrender.");
+        }
+    }
+
+    public void CommandTowers(Player player)
+    {
+        /* What should be printed:
+        +--------------------+
+        |##****@****@**|*****|
+        |#*@*##########|**@**|
+        |***########****\****|
+        |*@*#####***@***#----|
+        |----#***@***#####*@*|
+        |****\****########***|
+        |**@**|##########*@*#|
+        |*****|**@****@****##|
+        +--------------------+
+        */
+
+        final String redAlive  = ChatColor.RED   + "@" + ChatColor.WHITE;
+        final String blueAlive = ChatColor.BLUE  + "@" + ChatColor.WHITE;
+        final String redDead   = ChatColor.GRAY + "X" + ChatColor.WHITE;
+        final String blueDead  = ChatColor.GRAY + "X" + ChatColor.WHITE;
+
+        ClanBuildingList redBuildings = plugin.getClanTeams().get("red").getBuildings();
+        String redNexus  = redBuildings.buildingExists(BuildingType.Nexus, 0) ? redAlive : redDead;
+        String redTower1 = redBuildings.buildingExists(BuildingType.Tower, 1) ? redAlive : redDead;
+        String redTower2 = redBuildings.buildingExists(BuildingType.Tower, 2) ? redAlive : redDead;
+        String redTower3 = redBuildings.buildingExists(BuildingType.Tower, 3) ? redAlive : redDead;
+        String redTower4 = redBuildings.buildingExists(BuildingType.Tower, 4) ? redAlive : redDead;
+        String redTower5 = redBuildings.buildingExists(BuildingType.Tower, 5) ? redAlive : redDead;
+
+        ClanBuildingList blueBuildings = plugin.getClanTeams().get("blue").getBuildings();
+        String blueNexus  = blueBuildings.buildingExists(BuildingType.Nexus, 0) ? blueAlive : blueDead;
+        String blueTower1 = blueBuildings.buildingExists(BuildingType.Tower, 1) ? blueAlive : blueDead;
+        String blueTower2 = blueBuildings.buildingExists(BuildingType.Tower, 2) ? blueAlive : blueDead;
+        String blueTower3 = blueBuildings.buildingExists(BuildingType.Tower, 3) ? blueAlive : blueDead;
+        String blueTower4 = blueBuildings.buildingExists(BuildingType.Tower, 4) ? blueAlive : blueDead;
+        String blueTower5 = blueBuildings.buildingExists(BuildingType.Tower, 5) ? blueAlive : blueDead;
+
+
+        String[] towersDiagram = 
+        {
+            "+--------------------+", 
+            "|##       %s       %s   |        |",
+            "|#  %s   ##########|   %s   |",
+            "|      ########      \\      |",
+            "|  %s  #####     %s    #----|",
+            "|----#    %s     #####  %s  |",
+            "|      \\      ########      |",
+            "|   %s   |##########   %s  #|",
+            "|        |   %s       %s       ##|",
+            "+--------------------+",
+        };
+
+        towersDiagram[1] = String.format(towersDiagram[1], redTower2, redTower1);
+        towersDiagram[2] = String.format(towersDiagram[2], blueTower5, redNexus);
+        towersDiagram[4] = String.format(towersDiagram[4], blueTower4,redTower3);
+        towersDiagram[5] = String.format(towersDiagram[5], blueTower3, redTower4);
+        towersDiagram[7] = String.format(towersDiagram[7], blueNexus, redTower5);
+        towersDiagram[8] = String.format(towersDiagram[8], blueTower1, blueTower2);
+            
+        for (String line : towersDiagram)
+        {
+            player.sendMessage(line);
         }
     }
 

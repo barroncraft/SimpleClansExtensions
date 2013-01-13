@@ -44,24 +44,24 @@ public class ExtensionsListener implements Listener {
     private void loadRedBuildingLocs(World world) 
     {
         ClanBuildingList redBuildings = plugin.getClanTeams().get("red").getBuildings();
-        redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1189, 53, 347));
-        redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1190, 53, 257));
-        redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1089, 53, 458));
-        redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1001, 53, 448));
-        redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1091, 54, 339));
-        redBuildings.addBuilding(BuildingType.Nexus, new Location(world, -1159, 55, 410));
+        redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1190, 53, 257), 5);
+        redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1189, 53, 347), 4);
+        redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1091, 54, 339), 3);
+        redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1001, 53, 448), 2); 
+        redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1089, 53, 458), 1);
+        redBuildings.addBuilding(BuildingType.Nexus, new Location(world, -1159, 55, 410), 0);
         towerCounts.put("red", redBuildings.buildingsCount(BuildingType.Tower));
     }
 
     private void loadBlueTowerLocs(World world) 
     {
         ClanBuildingList blueBuildings = plugin.getClanTeams().get("blue").getBuildings();
-        blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -1046, 53, 184));
-        blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -1134, 53, 194));
-        blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -939, 53, 288));
-        blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -938, 53, 378));
-        blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -1044, 54, 296));
-        blueBuildings.addBuilding(BuildingType.Nexus, new Location(world, -976, 54, 225));
+        blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -938,  53, 378), 5);
+        blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -939,  53, 288), 4);
+        blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -1044, 54, 296), 3);
+        blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -1134, 53, 194), 2);
+        blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -1046, 53, 184), 1);
+        blueBuildings.addBuilding(BuildingType.Nexus, new Location(world, -976,  54, 225), 0);
         towerCounts.put("blue", blueBuildings.buildingsCount(BuildingType.Tower));
     }
 
