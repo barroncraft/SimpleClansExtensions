@@ -46,7 +46,7 @@ public class ExtensionsCommand
             {
                 oldClan.removeMember(player.getName());
                 AddPlayerToClan(clanPlayer, newClan, newClanName);
-                plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + " has transfered to team " + newClanName);
+                plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + " has transfered to team " + newClan.getColorTag());
             }
         } 
         else // Joining a clan for the first time
@@ -57,7 +57,7 @@ public class ExtensionsCommand
             {
                 AddPlayerToClan(clanPlayer, newClan, newClanName);
                 player.getInventory().addItem(new ItemStack(Material.STONE_SWORD, 1));
-                plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + " has joined team " + newClanName);
+                plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + " has joined team " + newClan.getColorTag());
             }
         }
     }
@@ -202,7 +202,8 @@ public class ExtensionsCommand
     {
         if (clan == null)
         {
-            plugin.getClanManager().createClan(player.toPlayer(), clanName, clanName);
+            ChatColor chatColor = plugin.getClanTeams().get(clanName).getColor();
+            plugin.getClanManager().createClan(player.toPlayer(), chatColor + clanName, clanName);
             clan = plugin.getClanManager().getClan(clanName);
             Location location = plugin.getClanTeams().get(clanName).getSpawn();
             if (location != null)
