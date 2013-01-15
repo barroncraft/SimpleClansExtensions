@@ -9,7 +9,7 @@ SimpleClansExtension is available under the GNU General Public License v3
     <groupId>com.barroncraft</groupId>
     <artifactId>SimpleClansExtensions</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>3.5-SNAPSHOT</version>
     <name>SimpleClansExtensions</name>
     <description/>
     <url>http://barroncraft.com/</url>
