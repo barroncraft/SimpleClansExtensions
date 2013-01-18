@@ -59,7 +59,6 @@ SimpleClansExtension is available under the GNU General Public License v3
         </dependency>
     </dependencies>
     <build>
-        <sourceDirectory>${basedir}/src/</sourceDirectory>
         <plugins>
             <!-- Compile plugin -->
             <plugin>
