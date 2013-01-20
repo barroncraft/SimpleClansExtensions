@@ -3,7 +3,7 @@ package com.barroncraft.sce;
 import java.io.File;
 import java.io.IOException;
 
-public class ServerResetter 
+public class ServerReseter
 {
     public static final String FileName = "reset-required";
 

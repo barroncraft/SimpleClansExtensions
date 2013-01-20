@@ -27,7 +27,6 @@ import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.inventory.Inventory;
 import com.barroncraft.sce.ClanBuildingList.BuildingType;
 import com.sk89q.worldedit.Vector;
-import org.kitteh.tag.TagAPI;
 import org.kitteh.tag.PlayerReceiveNameTagEvent;
 
 public class ExtensionsListener implements Listener {
@@ -98,7 +97,7 @@ public class ExtensionsListener implements Listener {
                 {
                     server.broadcastMessage(ChatColor.YELLOW + "The " + teamName + " NEXUS Has Been Destroyed!  Game over.");
 
-                    if (ServerResetter.enableResetFlag())
+                    if (ServerReseter.enableResetFlag())
                         server.broadcastMessage(ChatColor.YELLOW + "The map should auto reset within a few minutes.");
                     else
                         server.broadcastMessage(ChatColor.YELLOW + "There was an issue resetting the map.");

@@ -90,9 +90,9 @@ public class ExtensionsCommand
 
             if (surrenderRatio > 0.66d)
             {
-                if (!ServerResetter.getResetFlag())
+                if (!ServerReseter.getResetFlag())
                 {
-                    ServerResetter.enableResetFlag();
+                    ServerReseter.enableResetFlag();
                     ClanTeam team = plugin.getClanTeams().get(currentClan.getName());
                     String teamName = team.getColor() + team.getName().toUpperCase() + ChatColor.YELLOW;
                     plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The " + teamName + " team has agreed to surrender.  Game over.");
