@@ -50,10 +50,8 @@ public class SimpleClansExtensions extends JavaPlugin
 
     private Map<String, ClanTeam> clanTeams;
     private int maxDifference;
-    private long maxTimeEmpty;
     private boolean teamBalancing;
     private Logger log;
-
 
     public void onEnable()
     {
@@ -65,14 +63,14 @@ public class SimpleClansExtensions extends JavaPlugin
         Plugin clansPlugin = manager.getPlugin("SimpleClans");
         if (clansPlugin == null)
         {
-            log.severe("SimpleClans plugin not found.  SimpleClansExtenisons was not enabled.");
+            log.severe("SimpleClans plugin not found.  SimpleClansExtensions was not enabled.");
             return;
         }
 
         Plugin guardPlugin = manager.getPlugin("WorldGuard");
         if (guardPlugin == null)
         {
-            log.severe("WorldGuard plugin not found.  SimpleClansExtenisons was not enabled.");
+            log.severe("WorldGuard plugin not found.  SimpleClansExtensions was not enabled.");
             return;
         }
 
@@ -88,13 +86,16 @@ public class SimpleClansExtensions extends JavaPlugin
         maxDifference = config.getInt("joinDifference");
         log.info("joinDifference: " + maxDifference);
 
-        maxTimeEmpty = config.getLong("maxTimeEmpty") * 1000;
-        log.info("maxTimeEmpty: " + maxTimeEmpty);
-
         teamBalancing = config.getBoolean("teamBalancing");
         log.info("teamBalancing: " + teamBalancing);
 
-        World world = this.getServer().getWorld(config.getString("world"));
+        String worldName = config.getString("world");
+        World world = this.getServer().getWorld(worldName);
+        if (world == null)
+        {
+            log.severe("World '" + worldName + "' could not be found.");
+            return;
+        }
         log.info("world: " + world.getName());
 
         Set<String> clans = config.getConfigurationSection("clans").getKeys(false);
@@ -141,11 +142,8 @@ public class SimpleClansExtensions extends JavaPlugin
             }
             else if (args.length == 2 && args[0].equalsIgnoreCase("join"))
             {
-                /*if (!player.hasPermission("sce.join"))
-                  player.sendMessage(ChatColor.RED + "You don't have permission to join teams...");
-
-                  else*/ if (!clanTeams.containsKey(args[1]))
-                player.sendMessage(ChatColor.RED + "The clan " + args[1] + " doesn't exist.");
+                if (!clanTeams.containsKey(args[1]))
+                    player.sendMessage(ChatColor.RED + "The clan " + args[1] + " doesn't exist.");
                 else
                     commandManager.CommandJoin(player, args[1]);
                 return true;
@@ -172,7 +170,5 @@ public class SimpleClansExtensions extends JavaPlugin
 
     public Map<String, ClanTeam> getClanTeams() { return clanTeams; }
     public int getMaxDifference() { return maxDifference; }
-    public long getMaxTimeEmpty() { return maxTimeEmpty; }
     public boolean teamBalancingEnabled() { return teamBalancing; }
-    public Logger getLog() { return log; }
 }
