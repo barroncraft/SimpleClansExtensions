@@ -33,14 +33,14 @@ public class ExtensionsCommand
         ClanPlayer clanPlayer = plugin.getClanManager().getCreateClanPlayer(player.getName());
         Clan newClan = plugin.getClanManager().getClan(newClanName);
         Clan oldClan = clanPlayer.getClan();
-        int maxDifference = plugin.getMaxDifference();
+        int maxDifference = plugin.getExtensionsConfig().getMaxDifference();
         int transferDifference = maxDifference + 1;
 
         if (oldClan != null) // Changing clans
         {
             if (newClan != null && oldClan.getName().equalsIgnoreCase(newClan.getName()))
                 player.sendMessage(ChatColor.RED + "You can't transfer to the same team");
-            else if (plugin.teamBalancingEnabled() && PlayerDifference(oldClan, newClan) < transferDifference)
+            else if (plugin.getExtensionsConfig().teamBalancingEnabled() && PlayerDifference(oldClan, newClan) < transferDifference)
                 player.sendMessage(ChatColor.RED + "You can't transfer teams unless there is a difference of " + transferDifference + " between them");
             else
             {
@@ -51,7 +51,7 @@ public class ExtensionsCommand
         } 
         else // Joining a clan for the first time
         {
-            if (plugin.teamBalancingEnabled() && PlayerDifference(newClan, maxDifference) >= maxDifference)
+            if (plugin.getExtensionsConfig().teamBalancingEnabled() && PlayerDifference(newClan, maxDifference) >= maxDifference)
                 player.sendMessage(ChatColor.RED + "That team already has too many players.  Try a different one.");
             else
             {
@@ -93,7 +93,7 @@ public class ExtensionsCommand
                 if (!ServerReseter.getResetFlag())
                 {
                     ServerReseter.enableResetFlag();
-                    ClanTeam team = plugin.getClanTeams().get(currentClan.getName());
+                    ClanTeam team = plugin.getExtensionsConfig().getClanTeams().get(currentClan.getName());
                     String teamName = team.getColor() + team.getName().toUpperCase() + ChatColor.YELLOW;
                     plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The " + teamName + " team has agreed to surrender.  Game over.");
                     plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The map should auto reset within a few minutes.");
@@ -132,7 +132,7 @@ public class ExtensionsCommand
         final String redDead   = ChatColor.GRAY + "X" + ChatColor.WHITE;
         final String blueDead  = ChatColor.GRAY + "X" + ChatColor.WHITE;
 
-        ClanBuildingList redBuildings = plugin.getClanTeams().get("red").getBuildings();
+        ClanBuildingList redBuildings = plugin.getExtensionsConfig().getClanTeams().get("red").getBuildings();
         String redNexus  = redBuildings.buildingExists(BuildingType.Nexus, 0) ? redAlive : redDead;
         String redTower1 = redBuildings.buildingExists(BuildingType.Tower, 1) ? redAlive : redDead;
         String redTower2 = redBuildings.buildingExists(BuildingType.Tower, 2) ? redAlive : redDead;
@@ -140,7 +140,7 @@ public class ExtensionsCommand
         String redTower4 = redBuildings.buildingExists(BuildingType.Tower, 4) ? redAlive : redDead;
         String redTower5 = redBuildings.buildingExists(BuildingType.Tower, 5) ? redAlive : redDead;
 
-        ClanBuildingList blueBuildings = plugin.getClanTeams().get("blue").getBuildings();
+        ClanBuildingList blueBuildings = plugin.getExtensionsConfig().getClanTeams().get("blue").getBuildings();
         String blueNexus  = blueBuildings.buildingExists(BuildingType.Nexus, 0) ? blueAlive : blueDead;
         String blueTower1 = blueBuildings.buildingExists(BuildingType.Tower, 1) ? blueAlive : blueDead;
         String blueTower2 = blueBuildings.buildingExists(BuildingType.Tower, 2) ? blueAlive : blueDead;
@@ -180,7 +180,7 @@ public class ExtensionsCommand
     {
         int returnValue = 0;
         int count = GetOnlinePlayerCount(clan);
-        for (String name : plugin.getClanTeams().keySet())
+        for (String name : plugin.getExtensionsConfig().getClanTeams().keySet())
         {
             int clanCount = GetOnlinePlayerCount(plugin.getClanManager().getClan(name));
             int difference = count - clanCount;
@@ -202,10 +202,10 @@ public class ExtensionsCommand
     {
         if (clan == null)
         {
-            ChatColor chatColor = plugin.getClanTeams().get(clanName).getColor();
+            ChatColor chatColor = plugin.getExtensionsConfig().getClanTeams().get(clanName).getColor();
             plugin.getClanManager().createClan(player.toPlayer(), chatColor + clanName, clanName);
             clan = plugin.getClanManager().getClan(clanName);
-            Location location = plugin.getClanTeams().get(clanName).getSpawn();
+            Location location = plugin.getExtensionsConfig().getClanTeams().get(clanName).getSpawn();
             if (location != null)
                 clan.setHomeLocation(location);
         }

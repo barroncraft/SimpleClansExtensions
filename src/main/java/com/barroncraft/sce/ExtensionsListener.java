@@ -44,7 +44,7 @@ public class ExtensionsListener implements Listener {
 
     private void loadRedBuildingLocs(World world) 
     {
-        ClanBuildingList redBuildings = plugin.getClanTeams().get("red").getBuildings();
+        ClanBuildingList redBuildings = plugin.getExtensionsConfig().getClanTeams().get("red").getBuildings();
         redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1190, 53, 257), 5);
         redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1189, 53, 347), 4);
         redBuildings.addBuilding(BuildingType.Tower, new Location(world, -1091, 54, 339), 3);
@@ -56,7 +56,7 @@ public class ExtensionsListener implements Listener {
 
     private void loadBlueTowerLocs(World world) 
     {
-        ClanBuildingList blueBuildings = plugin.getClanTeams().get("blue").getBuildings();
+        ClanBuildingList blueBuildings = plugin.getExtensionsConfig().getClanTeams().get("blue").getBuildings();
         blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -938,  53, 378), 5);
         blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -939,  53, 288), 4);
         blueBuildings.addBuilding(BuildingType.Tower, new Location(world, -1044, 54, 296), 3);
@@ -75,7 +75,7 @@ public class ExtensionsListener implements Listener {
             Location eventLoc = event.getLocation();
             Server server = plugin.getServer();
 
-            for (ClanTeam team : plugin.getClanTeams().values())
+            for (ClanTeam team : plugin.getExtensionsConfig().getClanTeams().values())
             {
                 ClanBuildingList buildings = team.getBuildings();
                 String teamName = team.getColor() + team.getName().toUpperCase() + ChatColor.YELLOW;
@@ -160,7 +160,7 @@ public class ExtensionsListener implements Listener {
                 .get(player.getWorld())
                 .getApplicableRegionsIDs(pt);
 
-            for (ClanTeam team : plugin.getClanTeams().values())
+            for (ClanTeam team : plugin.getExtensionsConfig().getClanTeams().values())
             {
                 String teamName = team.getName();
 

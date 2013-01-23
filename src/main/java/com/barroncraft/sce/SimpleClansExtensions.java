@@ -19,44 +19,33 @@
 
 package com.barroncraft.sce;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 import net.sacredlabyrinth.phaed.simpleclans.*;
 import net.sacredlabyrinth.phaed.simpleclans.managers.*;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.managers.RegionManager;
 
 public class SimpleClansExtensions extends JavaPlugin
 {
     private ClanManager clanManager;
     private WorldGuardPlugin guardManager;
-    private RegionManager regionManager;
     private ExtensionsCommand commandManager;
 
-    private Map<String, ClanTeam> clanTeams;
-    private int maxDifference;
-    private boolean teamBalancing;
+    private ExtensionsConfig config;
     private Logger log;
 
     public void onEnable()
     {
         log = this.getLogger();
-        clanTeams = new HashMap<String, ClanTeam>();
 
         PluginManager manager = getServer().getPluginManager();
 
@@ -78,45 +67,9 @@ public class SimpleClansExtensions extends JavaPlugin
         guardManager = (WorldGuardPlugin)guardPlugin;
         commandManager = new ExtensionsCommand(this);
 
-        log.info("Loading Config File...");
-        FileConfiguration config = this.getConfig();
-        config.options().copyDefaults(true);
-        this.saveConfig();
+        config = new ExtensionsConfig(this);
 
-        maxDifference = config.getInt("joinDifference");
-        log.info("joinDifference: " + maxDifference);
-
-        teamBalancing = config.getBoolean("teamBalancing");
-        log.info("teamBalancing: " + teamBalancing);
-
-        String worldName = config.getString("world");
-        World world = this.getServer().getWorld(worldName);
-        if (world == null)
-        {
-            log.severe("World '" + worldName + "' could not be found.");
-            return;
-        }
-        log.info("world: " + world.getName());
-
-        Set<String> clans = config.getConfigurationSection("clans").getKeys(false);
-        log.info("Clans (" + clans.size() + "):");
-        for (String clan : clans)
-        {
-            log.info("  " + clan);
-            clanTeams.put(clan, new ClanTeam(
-                        clan, 
-                        ChatColor.valueOf(clan.toUpperCase()),
-                        new Location(world, 
-                            config.getInt("clans." + clan + ".spawn.x"),
-                            config.getInt("clans." + clan + ".spawn.y"),
-                            config.getInt("clans." + clan + ".spawn.z")
-                            ),
-                        config.getString("clans." + clan + ".baseRegion"),
-                        config.getString("clans." + clan + ".spawnRegion")
-                        ));
-        }
-
-        new ExtensionsListener(this, world);
+        new ExtensionsListener(this, config.getWorld());
 
         log.info("SimpleClanExtensions has been enabled");
     }
@@ -142,7 +95,7 @@ public class SimpleClansExtensions extends JavaPlugin
             }
             else if (args.length == 2 && args[0].equalsIgnoreCase("join"))
             {
-                if (!clanTeams.containsKey(args[1]))
+                if (!config.getClanTeams().containsKey(args[1]))
                     player.sendMessage(ChatColor.RED + "The clan " + args[1] + " doesn't exist.");
                 else
                     commandManager.CommandJoin(player, args[1]);
@@ -165,10 +118,5 @@ public class SimpleClansExtensions extends JavaPlugin
 
     public ClanManager getClanManager() { return clanManager; }
     public WorldGuardPlugin getGuardManager() { return guardManager; }
-    public RegionManager getRegionManager() { return regionManager; }
-    public ExtensionsCommand getCommandManager() { return commandManager; }
-
-    public Map<String, ClanTeam> getClanTeams() { return clanTeams; }
-    public int getMaxDifference() { return maxDifference; }
-    public boolean teamBalancingEnabled() { return teamBalancing; }
+    public ExtensionsConfig getExtensionsConfig() { return config; }
 }
