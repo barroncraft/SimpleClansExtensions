@@ -112,12 +112,14 @@ public class ExtensionsListener implements Listener {
     public void onVehicleDestroy(VehicleDestroyEvent event)
     {
         Vehicle vehicle = event.getVehicle();
-        Entity attacker = event.getAttacker();
-        if (vehicle.getType() != EntityType.MINECART || attacker.getType() != EntityType.PLAYER)
+        if (vehicle.getType() != EntityType.MINECART)
             return;
 
-        Player player = (Player)attacker;
-        Inventory inv = player.getInventory();
+        Entity attacker = event.getAttacker();
+        if (attacker == null || attacker.getType() != EntityType.PLAYER)
+            return;
+
+        Inventory inv = ((Player) attacker).getInventory();
         if (!inv.contains(Material.BOW, 1) || !inv.contains(Material.ARROW, 1))
         {
             event.setCancelled(true);
