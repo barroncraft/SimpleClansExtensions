@@ -13,6 +13,7 @@ import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
@@ -23,6 +24,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.bukkit.inventory.Inventory;
 import com.barroncraft.sce.ClanBuildingList.BuildingType;
 import com.sk89q.worldedit.Vector;
 import org.kitteh.tag.TagAPI;
@@ -110,8 +112,17 @@ public class ExtensionsListener implements Listener {
     public void onVehicleDestroy(VehicleDestroyEvent event)
     {
         Vehicle vehicle = event.getVehicle();
-        if (vehicle.getType() != EntityType.MINECART)
+        Entity attacker = event.getAttacker();
+        if (vehicle.getType() != EntityType.MINECART || attacker.getType() != EntityType.PLAYER)
             return;
+
+        Player player = (Player)attacker;
+        Inventory inv = player.getInventory();
+        if (!inv.contains(Material.BOW, 1) || !inv.contains(Material.ARROW, 1))
+        {
+            event.setCancelled(true);
+            return;
+        }
 
         Minecart cart = (Minecart)vehicle;
         Location location = cart.getLocation();
