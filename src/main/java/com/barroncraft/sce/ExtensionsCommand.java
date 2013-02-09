@@ -45,7 +45,7 @@ public class ExtensionsCommand
             else
             {
                 oldClan.removeMember(player.getName());
-                AddPlayerToClan(clanPlayer, newClan, newClanName);
+                newClan = AddPlayerToClan(clanPlayer, newClan, newClanName);
                 plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + " has transfered to team " + newClan.getColorTag());
             }
         } 
@@ -55,7 +55,7 @@ public class ExtensionsCommand
                 player.sendMessage(ChatColor.RED + "That team already has too many players.  Try a different one.");
             else
             {
-                AddPlayerToClan(clanPlayer, newClan, newClanName);
+                newClan = AddPlayerToClan(clanPlayer, newClan, newClanName);
                 player.getInventory().addItem(new ItemStack(Material.STONE_SWORD, 1));
                 plugin.getServer().broadcastMessage(ChatColor.YELLOW + player.getName() + " has joined team " + newClan.getColorTag());
             }
@@ -198,7 +198,7 @@ public class ExtensionsCommand
         return GetOnlinePlayerCount(firstClan) - GetOnlinePlayerCount(secondClan);
     }
 
-    private void AddPlayerToClan(ClanPlayer player, Clan clan, String clanName)
+    private Clan AddPlayerToClan(ClanPlayer player, Clan clan, String clanName)
     {
         if (clan == null)
         {
@@ -212,6 +212,7 @@ public class ExtensionsCommand
         clan.addPlayerToClan(player);
         player.toPlayer().teleport(clan.getHomeLocation());
         TagAPI.refreshPlayer(player.toPlayer());
+        return clan;
     }
 
     private int GetOnlinePlayerCount(Clan clan)
