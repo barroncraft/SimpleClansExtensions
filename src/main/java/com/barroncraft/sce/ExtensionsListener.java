@@ -78,7 +78,7 @@ public class ExtensionsListener implements Listener {
             for (ClanTeam team : plugin.getExtensionsConfig().getClanTeams().values())
             {
                 ClanBuildingList buildings = team.getBuildings();
-                String teamName = team.getColor() + team.getName().toUpperCase() + ChatColor.YELLOW;
+                String teamName = team.getColor() + team.getName() + ChatColor.YELLOW;
 
                 // Towers
                 if (buildings.destroyBuilding(BuildingType.Tower, eventLoc))
@@ -87,20 +87,20 @@ public class ExtensionsListener implements Listener {
 
                     // Check if all towers are destroyed
                     if (towerCounts.get(team.getName()) == 0) 
-                        server.broadcastMessage(ChatColor.YELLOW + "All "+ teamName + " Towers Are Destroyed! Defend the NEXUS!");
+                        server.broadcastMessage(ChatColor.YELLOW + "All "+ teamName + " towers are destroyed! Defend the NEXUS!");
                     else
-                        server.broadcastMessage(ChatColor.YELLOW + "A "+ teamName + " Tower Has Been Destroyed! (" + towerCounts.get(team.getName()) + " remaining)");
+                        server.broadcastMessage(ChatColor.YELLOW + "A "+ teamName + " tower has been destroyed! (" + towerCounts.get(team.getName()) + " remaining)");
                 }
 
                 // Nexus
                 if (buildings.destroyBuilding(BuildingType.Nexus, eventLoc))
                 {
-                    server.broadcastMessage(ChatColor.YELLOW + "The " + teamName + " NEXUS Has Been Destroyed!  Game over.");
+                    server.broadcastMessage(ChatColor.YELLOW + "The " + teamName + " NEXUS has been destroyed!  Game over.");
 
                     if (ServerReseter.enableResetFlag())
                         server.broadcastMessage(ChatColor.YELLOW + "The map should auto reset within a few minutes.");
                     else
-                        server.broadcastMessage(ChatColor.YELLOW + "There was an issue resetting the map.");
+                        server.broadcastMessage(ChatColor.YELLOW + "There was an issue resetting the map, please contact an admin.");
                 }
             }
         }
