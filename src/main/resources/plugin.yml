@@ -1,6 +1,6 @@
 name: SimpleClansExtensions
 main: com.barroncraft.sce.SimpleClansExtensions
-version: 3.6
+version: 3.7
 depend: [SimpleClans, WorldGuard]
 commands:
   sce:
