@@ -16,14 +16,15 @@ public class ExtensionsConfig
     private final int maxDifference;
     private final boolean teamBalancing;
     private final World world;
+    private final String resetCommand;
 
     public ExtensionsConfig(SimpleClansExtensions plugin)
     {
+        plugin.saveDefaultConfig();
         Logger log = plugin.getLogger();
 
         FileConfiguration config = plugin.getConfig();
         config.options().copyDefaults(true);
-        plugin.saveConfig();
 
         clanTeams = new HashMap<String, ClanTeam>();
 
@@ -32,6 +33,12 @@ public class ExtensionsConfig
 
         teamBalancing = config.getBoolean("teamBalancing");
         log.info("teamBalancing: " + teamBalancing);
+
+        resetCommand = config.contains("resetCommand") ? config.getString("resetCommand") : "";
+        if (resetCommand != null && !resetCommand.isEmpty())
+        {
+            log.info("resetCommand: " + resetCommand);
+        }
 
         String worldName = config.getString("world");
         world = plugin.getServer().getWorld(worldName);
@@ -65,4 +72,5 @@ public class ExtensionsConfig
     public int getMaxDifference() { return maxDifference; }
     public boolean teamBalancingEnabled() { return teamBalancing; }
     public World getWorld() { return world; }
+    public String getResetCommand() { return resetCommand; }
 }

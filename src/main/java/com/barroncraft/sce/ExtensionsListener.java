@@ -32,11 +32,13 @@ import org.kitteh.tag.PlayerReceiveNameTagEvent;
 public class ExtensionsListener implements Listener {
     SimpleClansExtensions plugin;
     Map<String, Integer> towerCounts;
+    ServerReseter resetter;
 
     public ExtensionsListener(SimpleClansExtensions plugin, World world)
     {
         this.plugin = plugin;
         this.towerCounts = new HashMap<String, Integer>();
+        this.resetter = new ServerReseter(plugin.getExtensionsConfig().getResetCommand());
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         loadRedBuildingLocs(world);
         loadBlueTowerLocs(world);
@@ -97,7 +99,7 @@ public class ExtensionsListener implements Listener {
                 {
                     server.broadcastMessage(ChatColor.YELLOW + "The " + teamName + " NEXUS has been destroyed!  Game over.");
 
-                    if (ServerReseter.enableResetFlag())
+                    if (resetter.resetFlag())
                         server.broadcastMessage(ChatColor.YELLOW + "The map should auto reset within a few minutes.");
                     else
                         server.broadcastMessage(ChatColor.YELLOW + "There was an issue resetting the map, please contact an admin.");

@@ -63,12 +63,10 @@ public class SimpleClansExtensions extends JavaPlugin
             return;
         }
 
+        config = new ExtensionsConfig(this);
         clanManager = ((SimpleClans)clansPlugin).getClanManager();
         guardManager = (WorldGuardPlugin)guardPlugin;
         commandManager = new ExtensionsCommand(this);
-
-        config = new ExtensionsConfig(this);
-
         new ExtensionsListener(this, config.getWorld());
 
         log.info("SimpleClanExtensions has been enabled");

@@ -21,11 +21,13 @@ public class ExtensionsCommand
 {
     SimpleClansExtensions plugin;
     Set<String> surrenderPlayers;
+    ServerReseter resetter;
 
     public ExtensionsCommand(SimpleClansExtensions plugin)
     {
         this.plugin = plugin;
         this.surrenderPlayers = new HashSet<String>();
+        this.resetter = new ServerReseter(plugin.getExtensionsConfig().getResetCommand());
     }
 
     public void CommandJoin(Player player, String newClanName)
@@ -90,9 +92,9 @@ public class ExtensionsCommand
 
             if (surrenderRatio > 0.66d)
             {
-                if (!ServerReseter.getResetFlag())
+                if (!resetter.getResetFlag())
                 {
-                    ServerReseter.enableResetFlag();
+                    resetter.resetFlag();
                     ClanTeam team = plugin.getExtensionsConfig().getClanTeams().get(currentClan.getName());
                     String teamName = team.getColor() + team.getName().toUpperCase() + ChatColor.YELLOW;
                     plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The " + teamName + " team has agreed to surrender.  Game over.");

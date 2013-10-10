@@ -2,44 +2,54 @@ package com.barroncraft.sce;
 
 import java.io.File;
 import java.io.IOException;
+import org.bukkit.Bukkit;
 
 public class ServerReseter
 {
-    public static final String FileName = "reset-required";
+    private final boolean useCommand;
 
-    public static boolean getResetFlag()
+    private final String fileName = "reset-required";
+
+    private final String resetCommand;
+    private boolean resetting;
+
+    public ServerReseter(String resetCommand)
     {
-        return new File(FileName).exists();
+        this.resetCommand = resetCommand;
+        this.useCommand = resetCommand != null && !resetCommand.isEmpty();
+        this.resetting = false;
     }
 
-    public static boolean enableResetFlag()
+    public boolean getResetFlag()
     {
-        return resetFlag(true);
+        return useCommand ? resetting : new File(fileName).exists();
     }
 
-    public static boolean clearResetFlag()
+    public boolean resetFlag()
     {
-        return resetFlag(false);
+        return useCommand ? resetWithCommand() : resetWithFile();
     }
 
-    public static boolean resetFlag(boolean reset)
+    private boolean resetWithCommand()
     {
-        File resetFile = new File(FileName);
-        if (resetFile.exists() == reset)
+        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), resetCommand);
+        resetting = true;
+        return true;
+    }
+
+    private boolean resetWithFile()
+    {
+        File resetFile = new File(fileName);
+        if (resetFile.exists())
             return true;
 
         try
         {
-            if (reset)
-                return resetFile.createNewFile();
-            else
-                return resetFile.delete();
-
+            return resetFile.createNewFile();
         } 
         catch(IOException e)
         {
             return false;
         }
-
     }
 }
