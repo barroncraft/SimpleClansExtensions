@@ -1,6 +1,6 @@
 name: SimpleClansExtensions
 main: com.barroncraft.sce.SimpleClansExtensions
-version: 3.7
+version: ${project.version}
 depend: [SimpleClans, WorldGuard]
 commands:
   sce:
