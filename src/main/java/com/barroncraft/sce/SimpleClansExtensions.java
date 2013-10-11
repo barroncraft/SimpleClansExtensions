@@ -99,6 +99,11 @@ public class SimpleClansExtensions extends JavaPlugin
                     commandManager.CommandJoin(player, args[1]);
                 return true;
             }
+            else if (args.length == 1 && args[0].equalsIgnoreCase("join"))
+            {
+                commandManager.CommandJoinRandom(player);
+                return true;
+            }
             else if (args.length == 1 && args[0].equalsIgnoreCase("surrender"))
             {
                 commandManager.CommandSurrender(player);

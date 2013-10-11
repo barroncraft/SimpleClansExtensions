@@ -30,6 +30,29 @@ public class ExtensionsCommand
         this.resetter = new ServerReseter(plugin);
     }
 
+    public void CommandJoinRandom(Player player)
+    {
+        Set<String> teams = plugin.getExtensionsConfig().getClanTeams().keySet();
+        int currentCount = Integer.MAX_VALUE;
+        String currentTeam = "";
+
+        for (String team : teams)
+        {
+            Clan clan = plugin.getClanManager().getClan(team);
+            int count = GetOnlinePlayerCount(clan);
+            if (count < currentCount)
+            {
+                currentTeam = team;
+                currentCount = count;
+            }
+        }
+
+        if (!currentTeam.isEmpty())
+            CommandJoin(player, currentTeam);
+        else
+            player.sendMessage(ChatColor.RED + "No teams to join...");
+    }
+
     public void CommandJoin(Player player, String newClanName)
     {
         ClanPlayer clanPlayer = plugin.getClanManager().getCreateClanPlayer(player.getName());
