@@ -17,6 +17,7 @@ public class ExtensionsConfig
     private final boolean teamBalancing;
     private final World world;
     private final String resetCommand;
+    private final long resetDelay;
 
     public ExtensionsConfig(SimpleClansExtensions plugin)
     {
@@ -39,6 +40,9 @@ public class ExtensionsConfig
         {
             log.info("resetCommand: " + resetCommand);
         }
+
+        resetDelay = config.contains("resetDelay") ? Long.valueOf(config.getInt("resetDelay")) : 0;
+        log.info("resetDelay: " + resetDelay);
 
         String worldName = config.getString("world");
         world = plugin.getServer().getWorld(worldName);
@@ -73,4 +77,5 @@ public class ExtensionsConfig
     public boolean teamBalancingEnabled() { return teamBalancing; }
     public World getWorld() { return world; }
     public String getResetCommand() { return resetCommand; }
+    public long getResetDelay() { return resetDelay; }
 }

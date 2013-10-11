@@ -27,7 +27,7 @@ public class ExtensionsCommand
     {
         this.plugin = plugin;
         this.surrenderPlayers = new HashSet<String>();
-        this.resetter = new ServerReseter(plugin.getExtensionsConfig().getResetCommand());
+        this.resetter = new ServerReseter(plugin);
     }
 
     public void CommandJoin(Player player, String newClanName)
@@ -94,7 +94,7 @@ public class ExtensionsCommand
             {
                 if (!resetter.getResetFlag())
                 {
-                    resetter.resetFlag();
+                    resetter.reset();
                     ClanTeam team = plugin.getExtensionsConfig().getClanTeams().get(currentClan.getName());
                     String teamName = team.getColor() + team.getName().toUpperCase() + ChatColor.YELLOW;
                     plugin.getServer().broadcastMessage(ChatColor.YELLOW + "The " + teamName + " team has agreed to surrender.  Game over.");

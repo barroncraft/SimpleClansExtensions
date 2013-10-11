@@ -38,7 +38,7 @@ public class ExtensionsListener implements Listener {
     {
         this.plugin = plugin;
         this.towerCounts = new HashMap<String, Integer>();
-        this.resetter = new ServerReseter(plugin.getExtensionsConfig().getResetCommand());
+        this.resetter = new ServerReseter(plugin);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         loadRedBuildingLocs(world);
         loadBlueTowerLocs(world);
@@ -98,11 +98,8 @@ public class ExtensionsListener implements Listener {
                 if (buildings.destroyBuilding(BuildingType.Nexus, eventLoc))
                 {
                     server.broadcastMessage(ChatColor.YELLOW + "The " + teamName + " NEXUS has been destroyed!  Game over.");
-
-                    if (resetter.resetFlag())
-                        server.broadcastMessage(ChatColor.YELLOW + "The map should auto reset within a few minutes.");
-                    else
-                        server.broadcastMessage(ChatColor.YELLOW + "There was an issue resetting the map, please contact an admin.");
+                    server.broadcastMessage(ChatColor.YELLOW + "The map should auto reset soon.");
+                    resetter.reset();
                 }
             }
         }

@@ -3,37 +3,55 @@ package com.barroncraft.sce;
 import java.io.File;
 import java.io.IOException;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 public class ServerReseter
 {
-    private final boolean useCommand;
-
     private final String fileName = "reset-required";
-
-    private final String resetCommand;
+    private final SimpleClansExtensions plugin;
+    private final boolean useCommand;
+    private long delay;
+    private final String command;
     private boolean resetting;
 
-    public ServerReseter(String resetCommand)
+    public ServerReseter(SimpleClansExtensions plugin)
     {
-        this.resetCommand = resetCommand;
-        this.useCommand = resetCommand != null && !resetCommand.isEmpty();
+        this.plugin = plugin;
+        this.command = plugin.getExtensionsConfig().getResetCommand();
+        this.delay = plugin.getExtensionsConfig().getResetDelay();
+        this.useCommand = command != null && !command.isEmpty();
         this.resetting = false;
     }
 
     public boolean getResetFlag()
     {
-        return useCommand ? resetting : new File(fileName).exists();
+        return resetting;
     }
 
-    public boolean resetFlag()
+    public long getDelay()
     {
-        return useCommand ? resetWithCommand() : resetWithFile();
+        return delay;
+    }
+
+    public void reset()
+    {
+        resetting = true;
+        if (delay > 0)
+            Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() { public void run() { runReset(); } }, delay);
+        else
+            runReset();
+    }
+
+    private void runReset()
+    {
+        boolean result = useCommand ? resetWithCommand() : resetWithFile();
+        if (!result)
+            plugin.getServer().broadcastMessage(ChatColor.YELLOW + "There was an issue resetting the map, please contact an admin.");
     }
 
     private boolean resetWithCommand()
     {
-        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), resetCommand);
-        resetting = true;
+        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), command);
         return true;
     }
 
