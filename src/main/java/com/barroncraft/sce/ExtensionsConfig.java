@@ -18,6 +18,7 @@ public class ExtensionsConfig
     private final World world;
     private final String resetCommand;
     private final long resetDelay;
+    private final boolean resetTeams;
 
     public ExtensionsConfig(SimpleClansExtensions plugin)
     {
@@ -43,6 +44,9 @@ public class ExtensionsConfig
 
         resetDelay = config.contains("resetDelay") ? Long.valueOf(config.getInt("resetDelay")) : 0;
         log.info("resetDelay: " + resetDelay);
+
+        resetTeams = config.contains("resetTeams") ? config.getBoolean("resetTeams") : false;
+        log.info("resetTeams: " + resetTeams);
 
         String worldName = config.getString("world");
         world = plugin.getServer().getWorld(worldName);
@@ -78,4 +82,5 @@ public class ExtensionsConfig
     public World getWorld() { return world; }
     public String getResetCommand() { return resetCommand; }
     public long getResetDelay() { return resetDelay; }
+    public boolean getResetTeams() { return resetTeams; }
 }

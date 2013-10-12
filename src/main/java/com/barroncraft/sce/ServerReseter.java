@@ -2,8 +2,12 @@ package com.barroncraft.sce;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+
+import net.sacredlabyrinth.phaed.simpleclans.Clan;
+import net.sacredlabyrinth.phaed.simpleclans.ClanPlayer;
 
 public class ServerReseter
 {
@@ -13,6 +17,7 @@ public class ServerReseter
     private long delay;
     private final String command;
     private boolean resetting;
+    private boolean resetTeams;
 
     public ServerReseter(SimpleClansExtensions plugin)
     {
@@ -21,6 +26,7 @@ public class ServerReseter
         this.delay = plugin.getExtensionsConfig().getResetDelay();
         this.useCommand = command != null && !command.isEmpty();
         this.resetting = false;
+        this.resetTeams = plugin.getExtensionsConfig().getResetTeams();
     }
 
     public boolean getResetFlag()
@@ -44,9 +50,22 @@ public class ServerReseter
 
     private void runReset()
     {
+        if (resetTeams)
+            resetTeams();
+
         boolean result = useCommand ? resetWithCommand() : resetWithFile();
         if (!result)
             plugin.getServer().broadcastMessage(ChatColor.YELLOW + "There was an issue resetting the map, please contact an admin.");
+    }
+
+    private void resetTeams()
+    {
+        Set<String> teams = plugin.getExtensionsConfig().getClanTeams().keySet();
+        for (String team : teams)
+        {
+            Clan clan = plugin.getClanManager().getClan(team);
+            clan.disband();
+        }
     }
 
     private boolean resetWithCommand()
