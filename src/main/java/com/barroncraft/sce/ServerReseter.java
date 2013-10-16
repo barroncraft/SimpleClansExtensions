@@ -64,7 +64,8 @@ public class ServerReseter
         for (String team : teams)
         {
             Clan clan = plugin.getClanManager().getClan(team);
-            clan.disband();
+            if (clan != null)
+                clan.disband();
         }
     }
 
